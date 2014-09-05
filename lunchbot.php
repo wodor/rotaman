@@ -8,6 +8,9 @@ require_once 'src/Storage.php';
  * <?xml version="1.0" encoding="utf8"?>
  * <config>
  *   <webhook>https://...</webhook>
+ *   <token>...</token>
+ *   <channel>...</channel>
+ *   <channel_id>...</channel_id>
  * </config>
  */
 
