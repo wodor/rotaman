@@ -61,6 +61,10 @@ switch ($command) {
         $response = "{$_POST['user_name']} has been added to Lunchclub";
         break;
 
+    case 'ping':
+        die('Pong!');
+        break;
+
     case 'help':
     default:
         $response = <<<TEXT
