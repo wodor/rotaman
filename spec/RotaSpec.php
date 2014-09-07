@@ -14,7 +14,7 @@ class RotaSpec extends ObjectBehavior
             new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave')
         );
 
-        $this->generateRota(new \DateTime('2010-01-11'), 5)->shouldReturn(
+        $this->getRota(new \DateTime('2010-01-11'), 5)->shouldReturn(
             [
                 '2010-01-11' => 'Alice',
                 '2010-01-12' => 'Bob',
@@ -31,7 +31,7 @@ class RotaSpec extends ObjectBehavior
             new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave')
         );
 
-        $this->generateRota(new \DateTime('2010-01-01'), 5)->shouldReturn(
+        $this->getRota(new \DateTime('2010-01-01'), 5)->shouldReturn(
             [
                 '2010-01-01' => 'Alice',
                 '2010-01-04' => 'Bob',
@@ -78,6 +78,6 @@ class RotaSpec extends ObjectBehavior
 
         $this->beConstructedWith(new Shopper($clubbers, 'Chris'), $currentRota);
 
-        $this->generateRota(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
+        $this->getRota(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }
 }
