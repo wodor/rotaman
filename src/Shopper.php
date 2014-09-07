@@ -16,6 +16,11 @@ class Shopper
         $this->shoppers = $shoppers;
     }
 
+    public function setCurrentShopper($shopper)
+    {
+        $this->currentShoper = $shopper;
+    }
+
     public function next()
     {
         $nextOffset = 0;

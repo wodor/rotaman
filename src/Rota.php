@@ -37,9 +37,13 @@ class Rota
 
     protected function getNextShopper(\DateTime $date)
     {
-        return isset($this->currentRota[$this->getDateKey($date)])
-            ? $this->currentRota[$this->getDateKey($date)]
-            : $this->shopper->next();
+        if (isset($this->currentRota[$this->getDateKey($date)])) {
+            $shopper = $this->currentRota[$this->getDateKey($date)];
+            $this->shopper->setCurrentShopper($this->currentRota[$this->getDateKey($date)]);
+            return $shopper;
+        } else {
+            return $this->shopper->next();
+        }
     }
 
     protected function getNextValidDate(DateTime $date)
