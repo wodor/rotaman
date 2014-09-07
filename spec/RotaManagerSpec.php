@@ -9,11 +9,11 @@ class RotaManagerSpec extends ObjectBehavior
 {
     function it_returns_clubbers(\Storage $storage)
     {
-        $shoppers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
 
         $storage->load()->willReturn([]);
         $storage->save(
-            ['shoppers' => $shoppers, 'rota' => null]
+            ['clubbers' => $clubbers, 'rota' => null]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -22,21 +22,21 @@ class RotaManagerSpec extends ObjectBehavior
         $this->addClubber('Bob');
         $this->addClubber('Chris');
         $this->addClubber('Dave');
-        $this->getClubbers()->shouldReturn($shoppers);
+        $this->getClubbers()->shouldReturn($clubbers);
     }
 
     function it_returns_rota(\Storage $storage)
     {
-        $shoppers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
         $expectedRota =             [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
             '2010-01-05' => 'Chris',
         ];
 
-        $storage->load()->willReturn(['shoppers' => $shoppers]);
+        $storage->load()->willReturn(['clubbers' => $clubbers]);
         $storage->save(
-            ['shoppers' => $shoppers, 'rota' => $expectedRota]
+            ['clubbers' => $clubbers, 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -44,22 +44,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->getRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
     }
 
-    function it_returns_shopper_for_date(\Storage $storage)
-    {
-        $shoppers = ['Alice', 'Bob', 'Chris', 'Dave'];
-        $expectedRota = [
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Chris',
-        ];
 
-        $storage->load()->willReturn(['shoppers' => $shoppers, 'rota' => $expectedRota]);
-        $storage->save(
-            ['shoppers' => $shoppers, 'rota' => $expectedRota]
-        )->willReturn(null);
 
-        $this->beConstructedWith($storage);
 
-        $this->getShopperForDate(new \DateTime('2010-01-05'))->shouldReturn('Chris');
-    }
 }

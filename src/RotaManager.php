@@ -4,7 +4,7 @@ class RotaManager
 {
     private $storage;
 
-    private $shoppers = [];
+    private $clubbers = [];
 
     private $rota;
 
@@ -13,8 +13,8 @@ class RotaManager
         $this->storage = $storage;
 
         $data = $storage->load();
-        if (isset($data['shoppers'])) {
-            $this->shoppers = $data['shoppers'];
+        if (isset($data['clubbers'])) {
+            $this->clubbers = $data['clubbers'];
         }
         if (isset($data['rota'])) {
             $this->rota = $data['rota'];
@@ -24,36 +24,30 @@ class RotaManager
     public function __destruct()
     {
         $this->storage->save(array(
-            'shoppers' => $this->shoppers,
+            'clubbers' => $this->clubbers,
             'rota' => $this->rota
         ));
     }
 
     public function addClubber($name)
     {
-        if (in_array($name, $this->shoppers)) {
+        if (in_array($name, $this->clubbers)) {
             throw InvalidArgumentException('Clubber already exists in list');
         }
-        $this->shoppers[] = $name;
+        $this->clubbers[] = $name;
     }
 
-    public function getShoppers()
+    public function getClubbers()
     {
-        return $this->shoppers;
+        return $this->clubbers;
     }
 
     public function getRota(DateTime $date, $days)
     {
-        $rota = new Rota(new Shopper($this->shoppers));
+        $rota = new Rota(new Shopper($this->clubbers));
         $this->rota = $rota->generateRota($date, $days);
         return $this->rota;
     }
 
-    public function getShopperForDate(DateTime $date)
-    {
-        if (empty($this->rota)) {
-            $this->getRota($date, 3);
-        }
-        return $this->rota[$date->format('Y-m-d')];
-    }
+
 }

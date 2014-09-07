@@ -68,6 +68,7 @@ switch ($command) {
     case 'help':
     default:
         $response = <<<TEXT
+/lunchbot <command>
 *help*: Display help
 *join*: Join Lunchclub
 *who*:  Whose turn it is to go shopping
