@@ -32,7 +32,7 @@ class RotaManager
     public function addClubber($name)
     {
         if (in_array($name, $this->clubbers)) {
-            throw InvalidArgumentException('Clubber already exists in list');
+            throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
         }
         $this->clubbers[] = $name;
     }
@@ -45,7 +45,7 @@ class RotaManager
     public function getRota(DateTime $date, $days)
     {
         $rota = new Rota(new Shopper($this->clubbers));
-        $this->rota = $rota->generateRota($date, $days);
+        $this->rota = $rota->getRota($date, $days);
         return $this->rota;
     }
 

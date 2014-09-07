@@ -1,8 +1,7 @@
 <?php
 interface Command
 {
-    public function __construct(array $args = array());
-    public function processArgs();
+    public function __construct(RotaManager $rotaManager, array $args = array());
     public function getUsage();
     public function run();
 }

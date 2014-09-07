@@ -15,7 +15,7 @@ class Rota
         $this->currentRota = $currentRota;
     }
 
-    public function generateRota(DateTime $date, $days)
+    public function getRota(DateTime $date, $days)
     {
         $date = clone $date;
 
@@ -30,7 +30,7 @@ class Rota
     public function getShopperForDate(DateTime $date)
     {
         if (!isset($this->currentRota[$date->format('Y-m-d')])) {
-            $this->generateRota($date, count($this->clubbers));
+            $this->getRota($date, count($this->clubbers));
         }
         return $this->currentRota[$date->format('Y-m-d')];
     }

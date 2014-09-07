@@ -3,6 +3,7 @@ require_once 'src/Rota.php';
 require_once 'src/RotaManager.php';
 require_once 'src/Shopper.php';
 require_once 'src/Storage.php';
+require_once 'src/Command.php';
 
 /**
  * <?xml version="1.0" encoding="utf8"?>
@@ -41,60 +42,43 @@ if ($slack) {
     array_shift($argv);
 }
 
-if (!empty($argv)) {
-    $command = $argv[0];
+$command = (!empty($argv))
+    ? $argv[0]
+    : 'help';
+
+$command = ucfirst(strtolower($command));
+
+$file = "src/Command/{$command}.php";
+if (!file_exists($file)) {
+    die("Command not found\n");
 }
 
-$rotaManager = new RotaManager(new Storage('.lunchbot'));
+require_once($file);
 
-switch ($command) {
-    case 'who':
-        $shopper = $rotaManager->getShopperForDate(new DateTime());
-        $response = "Today's shopper is {$shopper}";
-        break;
+$command = 'Command\\' . $command;
+$command = new $command(new RotaManager(new Storage('.lunchbot')), array_merge($argv, $_POST));
+$response = $command->run();
 
-    case 'join':
-        if (!$slack) {
-            throw new RunTimeException('Cannot run this command outside of Slack');
-        }
-        $rotaManager->addClubber($_POST['user_name']);
-        $response = "{$_POST['user_name']} has been added to Lunchclub";
-        break;
+if (!is_null($response)) {
+    if ($slack) {
+        $content['username'] = 'Lunchbot';
+        $content['text'] = $response;
+        $content['icon_emoji'] = ':sandwich:';
 
-    case 'ping':
-        die('Pong!');
-        break;
+        $payload = sprintf("payload=%s", json_encode($content));
 
-    case 'help':
-    default:
-        $response = <<<TEXT
-/lunchbot <command>
-*help*: Display help
-*join*: Join Lunchclub
-*who*:  Whose turn it is to go shopping
-[more commands to be implemented]
-TEXT;
-        break;
-}
+        $hook = "";
 
-if ($slack) {
-    $content['username'] = 'Lunchbot';
-    $content['text'] = $response;
-    $content['icon_emoji'] = ':sandwich:';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_URL, (string) $config->webhook);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_exec($ch);
 
-    $payload = sprintf("payload=%s", json_encode($content));
-
-    $hook = "";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_URL, (string) $config->webhook);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_exec($ch);
-
-    curl_close($ch);
-} else {
-    echo "{$response}\n";
+        curl_close($ch);
+    } else {
+        echo "{$response}";
+    }
 }
