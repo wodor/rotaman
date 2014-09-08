@@ -22,7 +22,7 @@ class Join implements Command
 
     public function getUsage()
     {
-
+        return '\`join\`: Join lunch club';
     }
 
     public function run()

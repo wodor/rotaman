@@ -12,25 +12,40 @@ use RotaManager;
 
 class Help implements Command
 {
+    private $rotaManager;
+
     public function __construct(RotaManager $rotaManager, array $args = array())
     {
-
+        $this->rotaManager = $rotaManager;
     }
 
     public function getUsage()
     {
-
+        return '\`help\`: Display this help text';
     }
 
     public function run()
     {
-        echo <<<TEXT
-/lunchbot <command>
-*help*: Display help
-*join*: Join Lunchclub
-*who*:  Whose turn it is to go shopping
-[more commands to be implemented]
-TEXT;
+        echo "/lunchbot <command>\n";
+        foreach ($this->getCommands() as $command) {
+            echo $command->getUsage() . "\n";
+        }
         return null;
+    }
+
+    protected function getCommands()
+    {
+        $commands = array();
+
+        $dir = Dir(__DIR__);
+        while ($entry = $dir->read()) {
+            if (preg_match('/^(?P<name>.*).php$/', $entry, $match)) {
+                require_once $entry;
+                $command = 'Command\\' . $match[1];
+                $commands[] = new $command($this->rotaManager);
+            }
+        }
+
+        return $commands;
     }
 } 

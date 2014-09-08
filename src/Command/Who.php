@@ -21,7 +21,7 @@ class Who implements Command
 
     public function getUsage()
     {
-
+        return '\`who\`: Whose turn it is to shop';
     }
 
     public function run()
