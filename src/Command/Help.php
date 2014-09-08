@@ -21,7 +21,7 @@ class Help implements Command
 
     public function getUsage()
     {
-        return '\`help\`: Display this help text';
+        return '`help`: Display this help text';
     }
 
     public function run()

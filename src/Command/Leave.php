@@ -1,18 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kachuru
- * Date: 07/09/14
- * Time: 19:49
- */
-
 namespace Command;
 use Command;
 use RotaManager;
 
-class Who implements Command
+class Leave implements Command
 {
     protected $rotaManager;
+    protected $args = array();
 
     public function __construct(RotaManager $rotaManager, array $args = array())
     {
@@ -21,12 +15,11 @@ class Who implements Command
 
     public function getUsage()
     {
-        return '`who`: Whose turn it is to shop';
+        return '`leave`: Leave lunch club (to-do)';
     }
 
     public function run()
     {
-        $shopper = $this->rotaManager->getShopperForDate(new \DateTime());
-        return "Today's shopper is {$shopper}";
+
     }
-} 
+}

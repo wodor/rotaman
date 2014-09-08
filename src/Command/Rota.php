@@ -23,7 +23,7 @@ class Rota implements Command
 
     public function getUsage()
     {
-        return "\`rota\`: Show the upcoming rota";
+        return '`rota`: Show the upcoming rota';
     }
 
     public function run()
