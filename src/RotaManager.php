@@ -4,50 +4,47 @@ class RotaManager
 {
     private $storage;
 
-    private $clubbers = [];
-
     private $rota;
+
+    private $shopper;
 
     public function __construct(Storage $storage)
     {
         $this->storage = $storage;
 
         $data = $storage->load();
-        if (isset($data['clubbers'])) {
-            $this->clubbers = $data['clubbers'];
-        }
-        if (isset($data['rota'])) {
-            $this->rota = $data['rota'];
-        }
+
+        $this->shopper = new \Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
+        $this->rota = new \Rota($this->shopper, isset($data['rota']) ? $data['rota'] : []);
     }
 
     public function __destruct()
     {
-        $this->storage->save(array(
-            'clubbers' => $this->clubbers,
-            'rota' => $this->rota
-        ));
-    }
-
-    public function addClubber($name)
-    {
-        if (in_array($name, $this->clubbers)) {
-            throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
+        if (!empty($this->storage)) {
+            $this->storage->save(array(
+                'clubbers' => $this->shopper->getShoppers(),
+                'rota' => $this->rota->getCurrentRota()
+            ));
         }
-        $this->clubbers[] = $name;
     }
 
-    public function getClubbers()
+    public function addShopper($name)
     {
-        return $this->clubbers;
+        $this->shopper->addShopper($name);
     }
 
-    public function getRota(DateTime $date, $days)
+    public function getShoppers()
     {
-        $rota = new Rota(new Shopper($this->clubbers));
-        $this->rota = $rota->getRota($date, $days);
-        return $this->rota;
+        return $this->shopper->getShoppers();
     }
 
+    public function generateRota(\DateTime $date, $days)
+    {
+        return $this->rota->generate($date, $days);
+    }
 
+    public function getShopperForDate(\DateTime $date)
+    {
+        return $this->rota->getShopperForDate($date);
+    }
 }

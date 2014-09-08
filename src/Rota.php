@@ -15,7 +15,7 @@ class Rota
         $this->currentRota = $currentRota;
     }
 
-    public function getRota(DateTime $date, $days)
+    public function generate(DateTime $date, $days)
     {
         $date = clone $date;
 
@@ -24,13 +24,19 @@ class Rota
             $date = $date->add($this->interval);
             $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
         }
+        $this->currentRota = array_merge($this->currentRota, $rota);
         return $rota;
+    }
+
+    public function getCurrentRota()
+    {
+        return $this->currentRota;
     }
 
     public function getShopperForDate(DateTime $date)
     {
         if (!isset($this->currentRota[$date->format('Y-m-d')])) {
-            $this->getRota($date, count($this->clubbers));
+            $this->generate($date, count($this->clubbers));
         }
         return $this->currentRota[$date->format('Y-m-d')];
     }

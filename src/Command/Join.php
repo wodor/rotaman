@@ -30,7 +30,7 @@ class Join implements Command
         if (!isset($this->args['user_name'])) {
             throw new \RunTimeException('No username found to join');
         }
-        $this->rotaManager->addClubber($_POST['user_name']);
+        $this->rotaManager->addShopper($_POST['user_name']);
         return "{$_POST['user_name']} has been added to Lunchclub";
     }
 }

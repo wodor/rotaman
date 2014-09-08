@@ -15,7 +15,7 @@ class Storage
 
     public function load()
     {
-        $data = array();
+        $data = [];
         if (file_exists($this->file)) {
             $data = json_decode(file_get_contents($this->file), true);
         }

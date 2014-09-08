@@ -2,23 +2,35 @@
 class Shopper
 {
     private $currentShopper;
-    private $shoppers;
+    private $shoppers = [];
 
     public function __construct(array $shoppers, $currentShopper = null)
     {
-        if (empty($shoppers)) {
-            throw new \InvalidArgumentException('No shoppers were provided');
-        }
-        if (!is_null($currentShopper) && !in_array($currentShopper, $shoppers)) {
-            throw new \InvalidArgumentException('Current Shopper must be in shoppers list');
-        }
-        $this->currentShopper = $currentShopper;
         $this->shoppers = $shoppers;
+        if (!is_null($currentShopper)) {
+            $this->setCurrentShopper($currentShopper);
+        }
     }
 
     public function setCurrentShopper($shopper)
     {
-        $this->currentShoper = $shopper;
+        if (!in_array($shopper, $this->shoppers)) {
+            throw new \InvalidArgumentException('Current Shopper must be in shoppers list');
+        }
+        $this->currentShopper = $shopper;
+    }
+
+    public function addShopper($name)
+    {
+        if (in_array($name, $this->shoppers)) {
+            throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
+        }
+        $this->shoppers[] = $name;
+    }
+
+    public function getShoppers()
+    {
+        return $this->shoppers;
     }
 
     public function next()
@@ -30,7 +42,6 @@ class Shopper
                 $nextOffset = 0;
             }
         }
-
         $this->currentShopper = $this->shoppers[$nextOffset];
         return $this->currentShopper;
     }

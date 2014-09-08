@@ -26,7 +26,7 @@ class Who implements Command
 
     public function run()
     {
-        $shopper = $this->rotaManager->getRota(new \DateTime())->getShopperForDate(new \DateTime());
+        $shopper = $this->rotaManager->getShopperForDate(new \DateTime());
         return "Today's shopper is {$shopper}";
     }
 } 

@@ -28,7 +28,7 @@ class Rota implements Command
 
     public function run()
     {
-        $rota = $this->rotaManager->getRota(new \DateTime(), 5);
+        $rota = $this->rotaManager->generateRota(new \DateTime(), count($this->rotaManager->getShoppers()));
         $response = '';
         foreach ($rota as $date => $clubber) {
             $date = new \DateTime($date);

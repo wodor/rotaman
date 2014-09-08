@@ -13,16 +13,16 @@ class RotaManagerSpec extends ObjectBehavior
 
         $storage->load()->willReturn([]);
         $storage->save(
-            ['clubbers' => $clubbers, 'rota' => null]
+            ['clubbers' => $clubbers, 'rota' => []]
         )->willReturn(null);
 
-        $this->beConstructedWith($storage);
+        $this->beConstructedWith($storage, new \DateTime());
 
-        $this->addClubber('Alice');
-        $this->addClubber('Bob');
-        $this->addClubber('Chris');
-        $this->addClubber('Dave');
-        $this->getClubbers()->shouldReturn($clubbers);
+        $this->addShopper('Alice');
+        $this->addShopper('Bob');
+        $this->addShopper('Chris');
+        $this->addShopper('Dave');
+        $this->getShoppers()->shouldReturn($clubbers);
     }
 
     function it_returns_rota(\Storage $storage)
@@ -31,7 +31,7 @@ class RotaManagerSpec extends ObjectBehavior
         $expectedRota =             [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Chris',
+            '2010-01-05' => 'Chris'
         ];
 
         $storage->load()->willReturn(['clubbers' => $clubbers]);
@@ -41,10 +41,25 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->getRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
+        $this->generateRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
     }
 
+    function it_returns_shopper_for_date(\Storage $storage)
+    {
+        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $expectedRota =             [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris'
+        ];
 
+        $storage->load()->willReturn(['clubbers' => $clubbers, 'rota' => $expectedRota]);
+        $storage->save(
+            ['clubbers' => $clubbers, 'rota' => $expectedRota]
+        )->willReturn(null);
 
+        $this->beConstructedWith($storage);
 
+        $this->getShopperForDate(new \DateTime('2010-01-04'))->shouldReturn('Bob');
+    }
 }

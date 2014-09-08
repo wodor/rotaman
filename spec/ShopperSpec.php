@@ -31,4 +31,11 @@ class ShopperSpec extends ObjectBehavior
         $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
         $this->next()->shouldReturn('Alice');
     }
+
+    function it_adds_new_shopper_to_list()
+    {
+        $this->beConstructedWith(['Alice', 'Bob'], 'Bob');
+        $this->addShopper('Chris');
+        $this->getShoppers()->shouldReturn(['Alice', 'Bob', 'Chris']);
+    }
 }
