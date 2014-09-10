@@ -56,7 +56,7 @@ if (!file_exists($file)) {
 require_once($file);
 
 $command = 'Command\\' . $command;
-$command = new $command(new RotaManager(new Storage('.lunchbot')), array_merge($argv, $_POST));
+$command = new $command(new RotaManager(new Storage(__DIR__ . '/.lunchbot')), array_merge($argv, $_POST));
 $response = $command->run();
 
 if (!is_null($response)) {
