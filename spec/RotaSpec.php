@@ -80,4 +80,22 @@ class RotaSpec extends ObjectBehavior
 
         $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }
+
+    function it_skips_current_user_and_realigns_rota()
+    {
+        $this->beConstructedWith(new Shopper(['Alice', 'Bob', 'Chris', 'Dave']), [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Dave',
+        ]);
+
+        $this->skipShopperForDate(new \DateTime('2010-01-04'));
+        $this->getCurrentRota()->shouldReturn([
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Chris',
+            '2010-01-05' => 'Dave',
+            '2010-01-06' => 'Alice',
+        ]);
+    }
 }

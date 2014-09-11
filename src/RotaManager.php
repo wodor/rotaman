@@ -47,4 +47,9 @@ class RotaManager
     {
         return $this->rota->getShopperForDate($date);
     }
+
+    public function skipShopperForDate(\DateTime $date)
+    {
+        return $this->rota->skipShopperForDate($date);
+    }
 }

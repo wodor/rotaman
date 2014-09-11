@@ -35,10 +35,19 @@ class Rota
 
     public function getShopperForDate(DateTime $date)
     {
-        if (!isset($this->currentRota[$date->format('Y-m-d')])) {
-            $this->generate($date, count($this->clubbers));
+        if (!isset($this->currentRota[$this->getDateKey($date)])) {
+            $this->generate($date, 1);
         }
-        return $this->currentRota[$date->format('Y-m-d')];
+        return $this->currentRota[$this->getDateKey($date)];
+    }
+
+
+    public function skipShopperForDate(DateTime $date)
+    {
+        while (isset($this->currentRota[$this->getDateKey($date)])) {
+            $currentDate = clone $date;
+            $this->currentRota[$this->getDateKey($currentDate)] = $this->getNextShopper($date->add($this->interval));
+        }
     }
 
     protected function getNextShopper(\DateTime $date)
@@ -65,5 +74,6 @@ class Rota
     {
         return $this->getNextValidDate($date)->format('Y-m-d');
     }
+
 
 }

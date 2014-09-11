@@ -15,11 +15,14 @@ class Skip implements Command
 
     public function getUsage()
     {
-        return '`skip` <name>: Skip shopping duty for <name> (to-do)';
+        return '`skip` <name>: Skip shopping duty for <name>, and pull remaining rota forwards';
     }
 
     public function run()
     {
-
+        $this->rotaManager->skipShopperForDate(new \DateTime());
+        require_once __DIR__ . '/Who.php';
+        $command = new Command\Who($this->rotaManager);
+        return $command->run();
     }
 }
