@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kachuru
- * Date: 07/09/14
- * Time: 19:48
- */
+namespace RgpJones\Lunchbot\Command;
 
-namespace Command;
-use Command;
-use RotaManager;
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Help implements Command
 {
@@ -30,6 +24,7 @@ class Help implements Command
         foreach ($this->getCommands() as $command) {
             echo $command->getUsage() . "\n";
         }
+
         return null;
     }
 
@@ -40,12 +35,11 @@ class Help implements Command
         $dir = Dir(__DIR__);
         while ($entry = $dir->read()) {
             if (preg_match('/^(?P<name>.*).php$/', $entry, $match)) {
-                require_once $entry;
-                $command = 'Command\\' . $match[1];
+                $command = __NAMESPACE__ . '\\' . $match[1];
                 $commands[] = new $command($this->rotaManager);
             }
         }
 
         return $commands;
     }
-} 
+}

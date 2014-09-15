@@ -1,4 +1,6 @@
 <?php
+namespace RgpJones\Lunchbot;
+
 class Shopper
 {
     private $currentShopper;
@@ -43,6 +45,7 @@ class Shopper
             }
         }
         $this->currentShopper = $this->shoppers[$nextOffset];
+
         return $this->currentShopper;
     }
 
@@ -53,6 +56,7 @@ class Shopper
             $prevOffset = count($this->shoppers) - 1;
         }
         $this->currentShopper = $this->shoppers[$prevOffset];
+
         return $this->currentShopper;
     }
 }

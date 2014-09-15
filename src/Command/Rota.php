@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kachuru
- * Date: 07/09/14
- * Time: 20:47
- */
+namespace RgpJones\Lunchbot\Command;
 
-namespace Command;
-use Command;
-use RotaManager;
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Rota implements Command
 {
@@ -34,6 +28,7 @@ class Rota implements Command
             $date = new \DateTime($date);
             $response .= "{$date->format('l')}: {$clubber}\n";
         }
+
         return $response;
     }
-} 
+}

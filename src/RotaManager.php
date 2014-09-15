@@ -1,4 +1,5 @@
 <?php
+namespace RgpJones\Lunchbot;
 
 class RotaManager
 {
@@ -14,8 +15,8 @@ class RotaManager
 
         $data = $storage->load();
 
-        $this->shopper = new \Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
-        $this->rota = new \Rota($this->shopper, isset($data['rota']) ? $data['rota'] : []);
+        $this->shopper = new Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
+        $this->rota = new Rota($this->shopper, isset($data['rota']) ? $data['rota'] : []);
     }
 
     public function __destruct()
