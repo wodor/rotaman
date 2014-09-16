@@ -1,5 +1,7 @@
 <?php
 
+namespace RgpJones\Lunchbot;
+
 class Storage
 {
     protected $file;
@@ -19,6 +21,7 @@ class Storage
         if (file_exists($this->file)) {
             $data = json_decode(file_get_contents($this->file), true);
         }
+
         return $data;
     }
 

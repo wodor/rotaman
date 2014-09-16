@@ -1,9 +1,8 @@
 <?php
 
-namespace spec;
+namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class ShopperSpec extends ObjectBehavior
 {

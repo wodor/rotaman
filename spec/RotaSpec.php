@@ -1,10 +1,9 @@
 <?php
 
-namespace spec;
+namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
-use Shopper;
+use RgpJones\Lunchbot\Shopper;
 
 class RotaSpec extends ObjectBehavior
 {

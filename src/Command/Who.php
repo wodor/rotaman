@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kachuru
- * Date: 07/09/14
- * Time: 19:49
- */
+namespace RgpJones\Lunchbot\Command;
 
-namespace Command;
-use Command;
-use RotaManager;
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Who implements Command
 {
@@ -27,6 +21,7 @@ class Who implements Command
     public function run()
     {
         $shopper = $this->rotaManager->getShopperForDate(new \DateTime());
+
         return "Today's shopper is {$shopper}";
     }
-} 
+}

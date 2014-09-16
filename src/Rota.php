@@ -1,4 +1,8 @@
 <?php
+namespace RgpJones\Lunchbot;
+
+use DateInterval;
+use DateTime;
 
 class Rota
 {
@@ -25,6 +29,7 @@ class Rota
             $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
         }
         $this->currentRota = array_merge($this->currentRota, $rota);
+
         return $rota;
     }
 
@@ -38,9 +43,9 @@ class Rota
         if (!isset($this->currentRota[$this->getDateKey($date)])) {
             $this->generate($date, 1);
         }
+
         return $this->currentRota[$this->getDateKey($date)];
     }
-
 
     public function skipShopperForDate(DateTime $date)
     {
@@ -55,6 +60,7 @@ class Rota
         if (isset($this->currentRota[$this->getDateKey($date)])) {
             $shopper = $this->currentRota[$this->getDateKey($date)];
             $this->shopper->setCurrentShopper($this->currentRota[$this->getDateKey($date)]);
+
             return $shopper;
         } else {
             return $this->shopper->next();
@@ -66,14 +72,12 @@ class Rota
         while (in_array($date->format('l'), array('Saturday', 'Sunday'))) {
             $date->add($this->interval);
         }
+
         return $date;
     }
-
 
     protected function getDateKey(DateTime $date)
     {
         return $this->getNextValidDate($date)->format('Y-m-d');
     }
-
-
 }

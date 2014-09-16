@@ -1,7 +1,8 @@
 <?php
-namespace Command;
-use Command;
-use RotaManager;
+namespace RgpJones\Lunchbot\Command;
+
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Skip implements Command
 {
@@ -21,8 +22,8 @@ class Skip implements Command
     public function run()
     {
         $this->rotaManager->skipShopperForDate(new \DateTime());
-        require_once __DIR__ . '/Who.php';
-        $command = new Command\Who($this->rotaManager);
+        $command = new Who($this->rotaManager);
+
         return $command->run();
     }
 }

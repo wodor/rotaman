@@ -1,9 +1,8 @@
 <?php
-require_once 'src/Rota.php';
-require_once 'src/RotaManager.php';
-require_once 'src/Shopper.php';
-require_once 'src/Storage.php';
-require_once 'src/Command.php';
+use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Lunchbot\Storage;
+
+require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * <?xml version="1.0" encoding="utf8"?>
@@ -47,15 +46,12 @@ $command = (!empty($argv))
     : 'help';
 
 $command = ucfirst(strtolower($command));
+$command = 'RgpJones\\Lunchbot\\Command\\' . $command;
 
-$file = "src/Command/{$command}.php";
-if (!file_exists($file)) {
+if (!class_exists($command)) {
     die("Command not found\n");
 }
 
-require_once($file);
-
-$command = 'Command\\' . $command;
 $command = new $command(new RotaManager(new Storage(__DIR__ . '/.lunchbot')), array_merge($argv, $_POST));
 $response = $command->run();
 

@@ -1,7 +1,8 @@
 <?php
-namespace Command;
-use Command;
-use RotaManager;
+namespace RgpJones\Lunchbot\Command;
+
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Swap implements Command
 {

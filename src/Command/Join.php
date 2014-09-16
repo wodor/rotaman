@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kachuru
- * Date: 07/09/14
- * Time: 19:49
- */
+namespace RgpJones\Lunchbot\Command;
 
-namespace Command;
-use Command;
-use RotaManager;
+use RgpJones\Lunchbot\Command;
+use RgpJones\Lunchbot\RotaManager;
 
 class Join implements Command
 {
@@ -31,6 +25,7 @@ class Join implements Command
             throw new \RunTimeException('No username found to join');
         }
         $this->rotaManager->addShopper($_POST['user_name']);
+
         return "{$_POST['user_name']} has been added to Lunchclub";
     }
 }
