@@ -7,6 +7,8 @@ class RotaManager
 
     private $rota;
 
+    private $dateValidator;
+
     private $shopper;
 
     public function __construct(Storage $storage)
@@ -16,16 +18,18 @@ class RotaManager
         $data = $storage->load();
 
         $this->shopper = new Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
-        $this->rota = new Rota($this->shopper, isset($data['rota']) ? $data['rota'] : []);
+        $this->dateValidator = new DateValidator(isset($data['cancelledDates']) ? $data['cancelledDates'] : []);
+        $this->rota = new Rota($this->shopper, $this->dateValidator, isset($data['rota']) ? $data['rota'] : []);
     }
 
     public function __destruct()
     {
         if (!empty($this->storage)) {
-            $this->storage->save(array(
+            $this->storage->save([
                 'clubbers' => $this->shopper->getShoppers(),
+                'cancelledDates' => $this->dateValidator->getCancelledDates(),
                 'rota' => $this->rota->getCurrentRota()
-            ));
+            ]);
         }
     }
 

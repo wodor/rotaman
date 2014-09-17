@@ -12,10 +12,13 @@ class Rota
 
     private $currentRota;
 
-    public function __construct(Shopper $shopper, array $currentRota = array())
+    private $dateValidator;
+
+    public function __construct(Shopper $shopper, DateValidator $dateValidator, array $currentRota = array())
     {
         $this->shopper = $shopper;
         $this->interval = new DateInterval('P1D');
+        $this->dateValidator = $dateValidator;
         $this->currentRota = $currentRota;
     }
 
@@ -67,17 +70,8 @@ class Rota
         }
     }
 
-    protected function getNextValidDate(DateTime $date)
-    {
-        while (in_array($date->format('l'), array('Saturday', 'Sunday'))) {
-            $date->add($this->interval);
-        }
-
-        return $date;
-    }
-
     protected function getDateKey(DateTime $date)
     {
-        return $this->getNextValidDate($date)->format('Y-m-d');
+        return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 }

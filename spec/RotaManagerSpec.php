@@ -13,7 +13,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $storage->load()->willReturn([]);
         $storage->save(
-            ['clubbers' => $clubbers, 'rota' => []]
+            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => []]
         )->willReturn(null);
 
         $this->beConstructedWith($storage, new \DateTime());
@@ -36,7 +36,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $storage->load()->willReturn(['clubbers' => $clubbers]);
         $storage->save(
-            ['clubbers' => $clubbers, 'rota' => $expectedRota]
+            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -53,9 +53,11 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-05' => 'Chris'
         ];
 
-        $storage->load()->willReturn(['clubbers' => $clubbers, 'rota' => $expectedRota]);
+        $storage->load()->willReturn(
+            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
+        );
         $storage->save(
-            ['clubbers' => $clubbers, 'rota' => $expectedRota]
+            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -79,9 +81,9 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-06' => 'Alice',
         ];
 
-        $storage->load()->willReturn(['clubbers' => $clubbers, 'rota' => $currentRota]);
+        $storage->load()->willReturn(['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $currentRota]);
         $storage->save(
-            ['clubbers' => $clubbers, 'rota' => $expectedRota]
+            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
