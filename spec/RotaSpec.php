@@ -105,4 +105,30 @@ class RotaSpec extends ObjectBehavior
             '2010-01-06' => 'Alice',
         ]);
     }
+
+    function it_cancels_lunchclub_on_date_and_realigns_rota()
+    {
+        $date = new \DateTime('2010-01-04');
+
+        $this->beConstructedWith(
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave',
+            ]
+        );
+
+        $this->cancelOnDate($date);
+        $this->getCurrentRota()->shouldReturn(
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-05' => 'Bob',
+                '2010-01-06' => 'Chris',
+                '2010-01-07' => 'Dave',
+            ]
+        );
+    }
 }

@@ -4,7 +4,6 @@ namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use RgpJones\Lunchbot\DateValidator;
 
 class DateValidatorSpec extends ObjectBehavior
 {
@@ -12,6 +11,16 @@ class DateValidatorSpec extends ObjectBehavior
     {
         $date = new \DateTime('2010-01-01');
         $this->getNextValidDate($date)->shouldReturn($date);
+    }
+
+    function it_returns_false_if_date_is_invalid()
+    {
+        $this->isDateValid(new \DateTime('2010-01-02'))->shouldReturn(false);
+    }
+
+    function it_returns_true_if_date_is_valid()
+    {
+        $this->isDateValid(new \DateTime('2010-01-05'))->shouldReturn(true);
     }
 
     function it_returns_monday_when_passed_weekend_date()
@@ -25,5 +34,11 @@ class DateValidatorSpec extends ObjectBehavior
         $this->beConstructedWith(array('2010-01-05'));
 
         $this->getNextValidDate(new \DateTime('2010-01-05'))->shouldBeLike(new \DateTime('2010-01-06'));
+    }
+
+    function it_adds_cancelled_date_to_list()
+    {
+        $this->addCancelledDate(new \DateTime('2010-01-05'))->shouldReturn(true);
+        $this->getCancelledDates()->shouldReturn(['2010-01-05']);
     }
 }

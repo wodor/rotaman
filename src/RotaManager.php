@@ -1,6 +1,8 @@
 <?php
 namespace RgpJones\Lunchbot;
 
+use DateTime;
+
 class RotaManager
 {
     private $storage;
@@ -43,18 +45,23 @@ class RotaManager
         return $this->shopper->getShoppers();
     }
 
-    public function generateRota(\DateTime $date, $days)
+    public function generateRota(DateTime $date, $days)
     {
         return $this->rota->generate($date, $days);
     }
 
-    public function getShopperForDate(\DateTime $date)
+    public function getShopperForDate(DateTime $date)
     {
         return $this->rota->getShopperForDate($date);
     }
 
-    public function skipShopperForDate(\DateTime $date)
+    public function skipShopperForDate(DateTime $date)
     {
         return $this->rota->skipShopperForDate($date);
+    }
+
+    public function cancelOnDate(DateTime $date)
+    {
+        return $this->rota->cancelOnDate($date);
     }
 }

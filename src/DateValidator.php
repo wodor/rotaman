@@ -16,15 +16,29 @@ class DateValidator
         $this->interval = new DateInterval('P1D');
     }
 
+    public function addCancelledDate(DateTime $date)
+    {
+        if ($this->isDateValid($date)) {
+            $this->cancelledDates[] = $date->format('Y-m-d');
+            return true;
+        }
+        return false;
+    }
+
     public function getCancelledDates()
     {
         return $this->cancelledDates;
     }
 
+    public function isDateValid(DateTime $date)
+    {
+        return !in_array($date->format('l'), array('Saturday', 'Sunday'))
+            && !in_array($date->format('Y-m-d'), $this->cancelledDates);
+    }
+
     public function getNextValidDate(DateTime $date)
     {
-        while (in_array($date->format('l'), array('Saturday', 'Sunday'))
-            || in_array($date->format('Y-m-d'), $this->cancelledDates)) {
+        while (!$this->isDateValid($date)) {
             $date->add($this->interval);
         }
 

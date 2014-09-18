@@ -58,6 +58,26 @@ class Rota
         }
     }
 
+    public function cancelOnDate(DateTime $cancelDate)
+    {
+        if ($this->dateValidator->isDateValid($cancelDate)) {
+            $date = clone $cancelDate;
+            if (isset($this->currentRota[$this->getDateKey($date)])) {
+                $shopper = $this->currentRota[$this->getDateKey($date)];
+                unset($this->currentRota[$this->getDateKey($date)]);
+                while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
+                    $nextShopper = $this->currentRota[$this->getDateKey($date)];
+                    $this->currentRota[$this->getDateKey($date)] = $shopper;
+                    $shopper = $nextShopper;
+                }
+                $this->currentRota[$this->getDateKey($date)] = $shopper;
+                $this->dateValidator->addCancelledDate($cancelDate);
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected function getNextShopper(\DateTime $date)
     {
         if (isset($this->currentRota[$this->getDateKey($date)])) {

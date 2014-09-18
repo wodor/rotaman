@@ -90,4 +90,30 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->skipShopperForDate(new \DateTime('2010-01-05'));
     }
+
+    function it_cancels_lunchclub_on_date(Storage $storage)
+    {
+        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $currentRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Dave',
+        ];
+        $expectedRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-06' => 'Chris',
+            '2010-01-07' => 'Dave',
+        ];
+
+        $storage->load()->willReturn(['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $currentRota]);
+        $storage->save(
+            ['clubbers' => $clubbers, 'cancelledDates' => ['2010-01-05'], 'rota' => $expectedRota]
+        )->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->cancelOnDate(new \DateTime('2010-01-05'));
+    }
 }
