@@ -71,8 +71,8 @@ class Rota
                     $shopper = $nextShopper;
                 }
                 $this->currentRota[$this->getDateKey($date)] = $shopper;
-                $this->dateValidator->addCancelledDate($cancelDate);
             }
+            $this->dateValidator->addCancelledDate($cancelDate);
             return true;
         }
         return false;
