@@ -1,11 +1,15 @@
 <?php
 namespace RgpJones\Lunchbot;
 
+use DateTime;
+
 class RotaManager
 {
     private $storage;
 
     private $rota;
+
+    private $dateValidator;
 
     private $shopper;
 
@@ -16,16 +20,18 @@ class RotaManager
         $data = $storage->load();
 
         $this->shopper = new Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
-        $this->rota = new Rota($this->shopper, isset($data['rota']) ? $data['rota'] : []);
+        $this->dateValidator = new DateValidator(isset($data['cancelledDates']) ? $data['cancelledDates'] : []);
+        $this->rota = new Rota($this->shopper, $this->dateValidator, isset($data['rota']) ? $data['rota'] : []);
     }
 
     public function __destruct()
     {
         if (!empty($this->storage)) {
-            $this->storage->save(array(
+            $this->storage->save([
                 'clubbers' => $this->shopper->getShoppers(),
+                'cancelledDates' => $this->dateValidator->getCancelledDates(),
                 'rota' => $this->rota->getCurrentRota()
-            ));
+            ]);
         }
     }
 
@@ -39,18 +45,23 @@ class RotaManager
         return $this->shopper->getShoppers();
     }
 
-    public function generateRota(\DateTime $date, $days)
+    public function generateRota(DateTime $date, $days)
     {
         return $this->rota->generate($date, $days);
     }
 
-    public function getShopperForDate(\DateTime $date)
+    public function getShopperForDate(DateTime $date)
     {
         return $this->rota->getShopperForDate($date);
     }
 
-    public function skipShopperForDate(\DateTime $date)
+    public function skipShopperForDate(DateTime $date)
     {
         return $this->rota->skipShopperForDate($date);
+    }
+
+    public function cancelOnDate(DateTime $date)
+    {
+        return $this->rota->cancelOnDate($date);
     }
 }

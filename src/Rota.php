@@ -12,10 +12,13 @@ class Rota
 
     private $currentRota;
 
-    public function __construct(Shopper $shopper, array $currentRota = array())
+    private $dateValidator;
+
+    public function __construct(Shopper $shopper, DateValidator $dateValidator, array $currentRota = array())
     {
         $this->shopper = $shopper;
         $this->interval = new DateInterval('P1D');
+        $this->dateValidator = $dateValidator;
         $this->currentRota = $currentRota;
     }
 
@@ -55,6 +58,26 @@ class Rota
         }
     }
 
+    public function cancelOnDate(DateTime $cancelDate)
+    {
+        if ($this->dateValidator->isDateValid($cancelDate)) {
+            $date = clone $cancelDate;
+            if (isset($this->currentRota[$this->getDateKey($date)])) {
+                $shopper = $this->currentRota[$this->getDateKey($date)];
+                unset($this->currentRota[$this->getDateKey($date)]);
+                while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
+                    $nextShopper = $this->currentRota[$this->getDateKey($date)];
+                    $this->currentRota[$this->getDateKey($date)] = $shopper;
+                    $shopper = $nextShopper;
+                }
+                $this->currentRota[$this->getDateKey($date)] = $shopper;
+                $this->dateValidator->addCancelledDate($cancelDate);
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected function getNextShopper(\DateTime $date)
     {
         if (isset($this->currentRota[$this->getDateKey($date)])) {
@@ -67,17 +90,8 @@ class Rota
         }
     }
 
-    protected function getNextValidDate(DateTime $date)
-    {
-        while (in_array($date->format('l'), array('Saturday', 'Sunday'))) {
-            $date->add($this->interval);
-        }
-
-        return $date;
-    }
-
     protected function getDateKey(DateTime $date)
     {
-        return $this->getNextValidDate($date)->format('Y-m-d');
+        return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 }

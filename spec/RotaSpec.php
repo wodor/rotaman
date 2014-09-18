@@ -4,13 +4,15 @@ namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
 use RgpJones\Lunchbot\Shopper;
+use RgpJones\Lunchbot\DateValidator;
 
 class RotaSpec extends ObjectBehavior
 {
     function it_generates_rota_for_next_5_days()
     {
         $this->beConstructedWith(
-            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave')
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave'),
+            new DateValidator()
         );
 
         $this->generate(new \DateTime('2010-01-11'), 5)->shouldReturn(
@@ -27,7 +29,8 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days_and_skip_weekend()
     {
         $this->beConstructedWith(
-            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave')
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave'),
+            new DateValidator()
         );
 
         $this->generate(new \DateTime('2010-01-01'), 5)->shouldReturn(
@@ -51,6 +54,7 @@ class RotaSpec extends ObjectBehavior
 
         $this->beConstructedWith(
             new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
             $currentRota
         );
 
@@ -75,19 +79,23 @@ class RotaSpec extends ObjectBehavior
             '2010-01-14' => 'Bob',
         ];
 
-        $this->beConstructedWith(new Shopper($clubbers, 'Chris'), $currentRota);
+        $this->beConstructedWith(new Shopper($clubbers, 'Chris'), new DateValidator(), $currentRota);
 
         $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }
 
     function it_skips_current_user_and_realigns_rota()
     {
-        $this->beConstructedWith(new Shopper(['Alice', 'Bob', 'Chris', 'Dave']), [
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Chris',
-            '2010-01-06' => 'Dave',
-        ]);
+        $this->beConstructedWith(
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave',
+            ]
+        );
 
         $this->skipShopperForDate(new \DateTime('2010-01-04'));
         $this->getCurrentRota()->shouldReturn([
@@ -96,5 +104,31 @@ class RotaSpec extends ObjectBehavior
             '2010-01-05' => 'Dave',
             '2010-01-06' => 'Alice',
         ]);
+    }
+
+    function it_cancels_lunchclub_on_date_and_realigns_rota()
+    {
+        $date = new \DateTime('2010-01-04');
+
+        $this->beConstructedWith(
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave',
+            ]
+        );
+
+        $this->cancelOnDate($date);
+        $this->getCurrentRota()->shouldReturn(
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-05' => 'Bob',
+                '2010-01-06' => 'Chris',
+                '2010-01-07' => 'Dave',
+            ]
+        );
     }
 }
