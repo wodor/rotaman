@@ -6,12 +6,9 @@ class Shopper
     private $currentShopper;
     private $shoppers = [];
 
-    public function __construct(array $shoppers, $currentShopper = null)
+    public function __construct(array $shoppers)
     {
         $this->shoppers = $shoppers;
-        if (!is_null($currentShopper)) {
-            $this->setCurrentShopper($currentShopper);
-        }
     }
 
     public function setCurrentShopper($shopper)

@@ -12,7 +12,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days()
     {
         $this->beConstructedWith(
-            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave'),
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator()
         );
 
@@ -30,7 +30,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days_and_skip_weekend()
     {
         $this->beConstructedWith(
-            new Shopper(['Alice', 'Bob', 'Chris', 'Dave'], 'Dave'),
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator()
         );
 
@@ -80,7 +80,7 @@ class RotaSpec extends ObjectBehavior
             '2010-01-14' => 'Bob',
         ];
 
-        $this->beConstructedWith(new Shopper($clubbers, 'Chris'), new DateValidator(), $currentRota);
+        $this->beConstructedWith(new Shopper($clubbers), new DateValidator(), $currentRota);
 
         $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }

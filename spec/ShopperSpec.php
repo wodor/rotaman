@@ -6,10 +6,10 @@ use PhpSpec\ObjectBehavior;
 
 class ShopperSpec extends ObjectBehavior
 {
-
     function it_should_return_next_shopper()
     {
-        $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave'], 'Alice');
+        $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
+        $this->setCurrentShopper('Alice');
         $this->next()->shouldReturn('Bob');
         $this->next()->shouldReturn('Chris');
         $this->next()->shouldReturn('Dave');
@@ -18,7 +18,8 @@ class ShopperSpec extends ObjectBehavior
 
     function it_should_return_prev_shopper()
     {
-        $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave'], 'Alice');
+        $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
+        $this->setCurrentShopper('Alice');
         $this->prev()->shouldReturn('Dave');
         $this->prev()->shouldReturn('Chris');
         $this->prev()->shouldReturn('Bob');
@@ -33,7 +34,8 @@ class ShopperSpec extends ObjectBehavior
 
     function it_adds_new_shopper_to_list()
     {
-        $this->beConstructedWith(['Alice', 'Bob'], 'Bob');
+        $this->beConstructedWith(['Alice', 'Bob']);
+        $this->setCurrentShopper('Bob');
         $this->addShopper('Chris');
         $this->getShoppers()->shouldReturn(['Alice', 'Bob', 'Chris']);
     }
