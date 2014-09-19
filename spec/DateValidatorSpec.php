@@ -41,4 +41,9 @@ class DateValidatorSpec extends ObjectBehavior
         $this->addCancelledDate(new \DateTime('2010-01-05'))->shouldReturn(true);
         $this->getCancelledDates()->shouldReturn(['2010-01-05']);
     }
+
+    function it_returns_previous_valid_date()
+    {
+        $this->getPreviousValidDate(new \DateTime('2010-01-02'))->shouldBeLike(new \DateTime('2010-01-01'));
+    }
 }

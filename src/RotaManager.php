@@ -19,9 +19,14 @@ class RotaManager
 
         $data = $storage->load();
 
-        $this->shopper = new Shopper(isset($data['clubbers']) ? $data['clubbers'] : []);
-        $this->dateValidator = new DateValidator(isset($data['cancelledDates']) ? $data['cancelledDates'] : []);
-        $this->rota = new Rota($this->shopper, $this->dateValidator, isset($data['rota']) ? $data['rota'] : []);
+        $currentRota = isset($data['rota']) ? $data['rota'] : [];
+		$cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
+        $clubbers = isset($data['clubbers']) ? $data['clubbers'] : [];
+
+        // Maintains shoppers in order as they are in current rota
+        $this->shopper = new Shopper(array_unique(array_values($currentRota) + $clubbers));
+        $this->dateValidator = new DateValidator($cancelledDates);
+        $this->rota = new Rota($this->shopper, $this->dateValidator, $currentRota);
     }
 
     public function __destruct()

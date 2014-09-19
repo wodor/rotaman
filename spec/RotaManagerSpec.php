@@ -3,6 +3,7 @@
 namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use RgpJones\Lunchbot\Storage;
 
 class RotaManagerSpec extends ObjectBehavior
@@ -42,6 +43,32 @@ class RotaManagerSpec extends ObjectBehavior
         $this->beConstructedWith($storage);
 
         $this->generateRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
+    }
+
+    function it_maintains_order_of_clubbers_in_rota(Storage $storage)
+    {
+        $currentRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Dave',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Bob',
+        ];
+        $expectedRota = [
+            '2010-01-07' => 'Elaine',
+            '2010-01-08' => 'Alice',
+            '2010-01-11' => 'Dave',
+            '2010-01-12' => 'Chris',
+            '2010-01-13' => 'Bob',
+        ];
+
+        $storage->load()->willReturn(['clubbers' => ['Alice', 'Bob', 'Chris', 'Dave', 'Elaine'], 'rota' => $currentRota]);
+        $storage->save(
+            ['clubbers' => ['Alice', 'Dave', 'Chris', 'Bob', 'Elaine'], 'cancelledDates' => [], 'rota' => ($currentRota + $expectedRota)]
+        )->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->generateRota(new \DateTime('2010-01-07'), 5)->shouldReturn($expectedRota);
     }
 
     function it_returns_shopper_for_date(Storage $storage)

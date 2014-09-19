@@ -3,6 +3,7 @@
 namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use RgpJones\Lunchbot\Shopper;
 use RgpJones\Lunchbot\DateValidator;
 
@@ -131,4 +132,58 @@ class RotaSpec extends ObjectBehavior
             ]
         );
     }
+
+    function it_gets_previous_rota_date()
+    {
+        $this->beConstructedWith(
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave',
+            ]
+        );
+
+        $this->getPreviousRotaDate(new \DateTime('2010-01-04'))->shouldBeLike(new \DateTime('2010-01-01'));
+        $this->getPreviousRotaDate(new \DateTime('2012-01-01'))->shouldBeLike(new \DateTime('2010-01-06'));
+    }
+
+    function it_swaps_shoppers()
+    {
+/*
+        $this->beConstructedWith(new Shopper(['Alice', 'Bob', 'Chris', 'Dave']), [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Dave',
+        ]);
+
+        $this->swapShopper('Bob', 'Dave');
+        $this->getCurrentRota()->shouldReturn([
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Dave',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Bob',
+        ]);
+*/
+    }
+
+    function it_returns_previous_shopper()
+    {
+        $this->beConstructedWith(
+            new Shopper(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave',
+            ]
+        );
+
+        $this->getPreviousShopper(new \DateTime('2010-01-05'))->shouldReturn('Bob');
+    }
+
 }

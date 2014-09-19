@@ -44,4 +44,12 @@ class DateValidator
 
         return $date;
     }
+
+    public function getPreviousValidDate(DateTime $date)
+    {
+        while (!$this->isDateValid($date)) {
+            $date->sub($this->interval);
+        }
+        return $date;
+    }
 }

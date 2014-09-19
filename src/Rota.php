@@ -24,7 +24,11 @@ class Rota
 
     public function generate(DateTime $date, $days)
     {
-        $date = clone $date;
+        // Sets current shopper to the shopper for the previous time lunchclub ran
+        $previousDate = $this->getPreviousRotaDate($date);
+        if (!is_null($previousDate)) {
+            $this->shopper->setCurrentShopper($this->currentRota[$previousDate->format('Y-m-d')]);
+        }
 
         $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
         while (count($rota) < $days) {
@@ -49,6 +53,7 @@ class Rota
 
         return $this->currentRota[$this->getDateKey($date)];
     }
+
 
     public function skipShopperForDate(DateTime $date)
     {
@@ -78,7 +83,7 @@ class Rota
         return false;
     }
 
-    protected function getNextShopper(\DateTime $date)
+    public function getNextShopper(\DateTime $date)
     {
         if (isset($this->currentRota[$this->getDateKey($date)])) {
             $shopper = $this->currentRota[$this->getDateKey($date)];
@@ -90,8 +95,45 @@ class Rota
         }
     }
 
+    public function getPreviousShopper(DateTime $date)
+    {
+        $previousShopper = null;
+        if (isset($this->currentRota[$this->getDateKey($date->sub($this->interval))])) {
+            $previousShopper = $this->currentRota[$this->getDateKey($date->sub($this->interval))];
+        }
+        return $previousShopper;
+    }
+
+    public function getPreviousRotaDate(DateTime $date)
+    {
+        $rotaDates = $this->getRotaDatesWithDate($date);
+
+        $rotaDate = null;
+        $offset = array_search($date->format('Y-m-d'), $rotaDates);
+        if ($offset > 0) {
+            $rotaDate = new DateTime($rotaDates[$offset-1]);
+        }
+        return $rotaDate;
+    }
+
+    protected function getRotaDatesWithDate(DateTime $date)
+    {
+        $date = $date->format('Y-m-d');
+        $rotaDates = array_keys($this->currentRota);
+        if (!in_array($date, $rotaDates)) {
+            $rotaDates[] = $date;
+        }
+        sort($rotaDates);
+        return $rotaDates;
+    }
+
     protected function getDateKey(DateTime $date)
     {
         return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
+    }
+
+    public function swapShopper($argument1, $argument2)
+    {
+        // TODO: write logic here
     }
 }
