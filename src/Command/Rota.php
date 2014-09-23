@@ -6,6 +6,8 @@ use RgpJones\Lunchbot\RotaManager;
 
 class Rota implements Command
 {
+    const MAX_DAYS = 20;
+
     protected $rotaManager;
     protected $args = array();
 
@@ -17,12 +19,20 @@ class Rota implements Command
 
     public function getUsage()
     {
-        return '`rota`: Show the upcoming rota';
+        return '`rota` [days]: Show the upcoming rota for the number of days specified';
     }
 
     public function run()
     {
-        $rota = $this->rotaManager->generateRota(new \DateTime(), count($this->rotaManager->getShoppers()));
+        $days = isset($this->args[1])
+            ? $this->args[1]
+            : count($this->rotaManager->getShoppers());
+
+        if ($days > self::MAX_DAYS) {
+            throw new \LengthException('Cannot exceed more than ' . self::MAX_DAYS . ' days into the future.');
+        }
+
+        $rota = $this->rotaManager->generateRota(new \DateTime(), $days);
         $response = '';
         foreach ($rota as $date => $clubber) {
             $date = new \DateTime($date);

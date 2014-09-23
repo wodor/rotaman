@@ -16,7 +16,7 @@ class Skip implements Command
 
     public function getUsage()
     {
-        return '`skip` <name>: Skip shopping duty for <name>, and pull remaining rota forwards';
+        return '`skip`: Skip current shopper, and pull remaining rota forwards';
     }
 
     public function run()
