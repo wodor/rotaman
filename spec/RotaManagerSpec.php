@@ -8,13 +8,13 @@ use RgpJones\Lunchbot\Storage;
 
 class RotaManagerSpec extends ObjectBehavior
 {
-    function it_returns_clubbers(Storage $storage)
+    function it_returns_members(Storage $storage)
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
 
         $storage->load()->willReturn([]);
         $storage->save(
-            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => []]
+            ['members' => $members, 'cancelledDates' => [], 'rota' => []]
         )->willReturn(null);
 
         $this->beConstructedWith($storage, new \DateTime());
@@ -23,21 +23,21 @@ class RotaManagerSpec extends ObjectBehavior
         $this->addShopper('Bob');
         $this->addShopper('Chris');
         $this->addShopper('Dave');
-        $this->getShoppers()->shouldReturn($clubbers);
+        $this->getShoppers()->shouldReturn($members);
     }
 
     function it_returns_rota(Storage $storage)
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $expectedRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
             '2010-01-05' => 'Chris'
         ];
 
-        $storage->load()->willReturn(['clubbers' => $clubbers]);
+        $storage->load()->willReturn(['members' => $members]);
         $storage->save(
-            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
+            ['members' => $members, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -45,7 +45,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->generateRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
     }
 
-    function it_maintains_order_of_clubbers_in_rota(Storage $storage)
+    function it_maintains_order_of_members_in_rota(Storage $storage)
     {
         $currentRota = [
             '2010-01-01' => 'Alice',
@@ -61,9 +61,9 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-13' => 'Bob',
         ];
 
-        $storage->load()->willReturn(['clubbers' => ['Alice', 'Bob', 'Chris', 'Dave', 'Elaine'], 'rota' => $currentRota]);
+        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave', 'Elaine'], 'rota' => $currentRota]);
         $storage->save(
-            ['clubbers' => ['Alice', 'Dave', 'Chris', 'Bob', 'Elaine'], 'cancelledDates' => [], 'rota' => ($currentRota + $expectedRota)]
+            ['members' => ['Alice', 'Dave', 'Chris', 'Bob', 'Elaine'], 'cancelledDates' => [], 'rota' => ($currentRota + $expectedRota)]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -73,7 +73,7 @@ class RotaManagerSpec extends ObjectBehavior
 
     function it_returns_shopper_for_date(Storage $storage)
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $expectedRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
@@ -81,10 +81,10 @@ class RotaManagerSpec extends ObjectBehavior
         ];
 
         $storage->load()->willReturn(
-            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
+            ['members' => $members, 'cancelledDates' => [], 'rota' => $expectedRota]
         );
         $storage->save(
-            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
+            ['members' => $members, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -94,7 +94,7 @@ class RotaManagerSpec extends ObjectBehavior
 
     function it_skips_shopper_for_date(Storage $storage)
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $currentRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
@@ -108,9 +108,9 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-06' => 'Alice',
         ];
 
-        $storage->load()->willReturn(['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $currentRota]);
+        $storage->load()->willReturn(['members' => $members, 'cancelledDates' => [], 'rota' => $currentRota]);
         $storage->save(
-            ['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $expectedRota]
+            ['members' => $members, 'cancelledDates' => [], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -120,7 +120,7 @@ class RotaManagerSpec extends ObjectBehavior
 
     function it_cancels_lunchclub_on_date(Storage $storage)
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $currentRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
@@ -134,13 +134,39 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-07' => 'Dave',
         ];
 
-        $storage->load()->willReturn(['clubbers' => $clubbers, 'cancelledDates' => [], 'rota' => $currentRota]);
+        $storage->load()->willReturn(['members' => $members, 'cancelledDates' => [], 'rota' => $currentRota]);
         $storage->save(
-            ['clubbers' => $clubbers, 'cancelledDates' => ['2010-01-05'], 'rota' => $expectedRota]
+            ['members' => $members, 'cancelledDates' => ['2010-01-05'], 'rota' => $expectedRota]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
 
         $this->cancelOnDate(new \DateTime('2010-01-05'));
+    }
+
+    function it_saves_shoppers_correctly_missing_from_current_rota(Storage $storage)
+    {
+        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $currentRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Dave',
+            '2010-01-07' => 'Alice'
+        ];
+        $nextRota = [
+            '2010-01-12' => 'Bob',
+            '2010-01-13' => 'Dave',
+            '2010-01-14' => 'Chris',
+            '2010-01-15' => 'Alice',
+        ];
+
+        $storage->load()->willReturn(['members' => $members, 'cancelledDates' => [], 'rota' => $currentRota]);
+        $storage->save(
+            ['members' => ['Alice', 'Bob', 'Dave', 'Chris'], 'cancelledDates' => [], 'rota' => $currentRota + $nextRota]
+        )->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldReturn($nextRota);
     }
 }

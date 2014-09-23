@@ -21,10 +21,10 @@ class RotaManager
 
         $currentRota = isset($data['rota']) ? $data['rota'] : [];
 		$cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
-        $clubbers = isset($data['clubbers']) ? $data['clubbers'] : [];
+        $members = isset($data['members']) ? $data['members'] : [];
 
         // Maintains shoppers in order as they are in current rota
-        $this->shopper = new Shopper(array_unique(array_values($currentRota) + $clubbers));
+        $this->shopper = new Shopper($this->getMembersInRotaOrder($members, $currentRota));
         $this->dateValidator = new DateValidator($cancelledDates);
         $this->rota = new Rota($this->shopper, $this->dateValidator, $currentRota);
     }
@@ -33,7 +33,7 @@ class RotaManager
     {
         if (!empty($this->storage)) {
             $this->storage->save([
-                'clubbers' => $this->shopper->getShoppers(),
+                'members' => $this->shopper->getShoppers(),
                 'cancelledDates' => $this->dateValidator->getCancelledDates(),
                 'rota' => $this->rota->getCurrentRota()
             ]);
@@ -68,5 +68,11 @@ class RotaManager
     public function cancelOnDate(DateTime $date)
     {
         return $this->rota->cancelOnDate($date);
+    }
+
+
+    protected function getMembersInRotaOrder(array $members, array $currentRota)
+    {
+        return array_values(array_unique(array_merge($currentRota, $members)));
     }
 }
