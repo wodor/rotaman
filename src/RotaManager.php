@@ -20,7 +20,7 @@ class RotaManager
         $data = $storage->load();
 
         $currentRota = isset($data['rota']) ? $data['rota'] : [];
-		$cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
+        $cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
         $members = isset($data['members']) ? $data['members'] : [];
 
         // Maintains shoppers in order as they are in current rota
@@ -69,7 +69,6 @@ class RotaManager
     {
         return $this->rota->cancelOnDate($date);
     }
-
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)
     {

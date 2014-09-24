@@ -1,16 +1,19 @@
 <?php
 namespace RgpJones\Lunchbot\Command;
 
+use Pimple\Container;
 use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
 
 class Help implements Command
 {
-    private $rotaManager;
+    /**
+     * @var Container
+     */
+    private $commands;
 
-    public function __construct(RotaManager $rotaManager, array $args = array())
+    public function __construct(Container $commands)
     {
-        $this->rotaManager = $rotaManager;
+        $this->commands = $commands;
     }
 
     public function getUsage()
@@ -18,28 +21,14 @@ class Help implements Command
         return '`help`: Display this help text';
     }
 
-    public function run()
+    public function run(array $args, $username)
     {
-        echo "/lunchbot <command>\n";
-        foreach ($this->getCommands() as $command) {
-            echo $command->getUsage() . "\n";
+        $response = "/lunchbot <command>\n";
+
+        foreach ($this->commands->keys() as $key) {
+            $response .= $this->commands[$key]->getUsage() . "\n";
         }
 
-        return null;
-    }
-
-    protected function getCommands()
-    {
-        $commands = array();
-
-        $dir = Dir(__DIR__);
-        while ($entry = $dir->read()) {
-            if (preg_match('/^(?P<name>.*).php$/', $entry, $match)) {
-                $command = __NAMESPACE__ . '\\' . $match[1];
-                $commands[] = new $command($this->rotaManager);
-            }
-        }
-
-        return $commands;
+        return $response;
     }
 }

@@ -3,7 +3,16 @@ namespace RgpJones\Lunchbot;
 
 interface Command
 {
-    public function __construct(RotaManager $rotaManager, array $args = array());
+    /**
+     * @return string
+     */
     public function getUsage();
-    public function run();
+
+    /**
+     * @param array $args
+     * @param $username
+     *
+     * @return string|null
+     */
+    public function run(array $args, $username);
 }

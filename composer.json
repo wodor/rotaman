@@ -1,6 +1,7 @@
 {
     "require-dev": {
-        "phpspec/phpspec": "dev-master"
+        "phpspec/phpspec": "dev-master",
+        "behat/behat": "3.*"
     },
     "config": {
         "bin-dir": "bin"
@@ -10,5 +11,8 @@
             "RgpJones\\Lunchbot\\": "src/",
             "spec\\RgpJones\\Lunchbot\\": "spec/"
         }
+    },
+    "require": {
+        "silex/silex": "2.0.*@dev"
     }
 }

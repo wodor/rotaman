@@ -54,7 +54,6 @@ class Rota
         return $this->currentRota[$this->getDateKey($date)];
     }
 
-
     public function skipShopperForDate(DateTime $date)
     {
         while (isset($this->currentRota[$this->getDateKey($date)])) {
@@ -78,8 +77,10 @@ class Rota
                 $this->currentRota[$this->getDateKey($date)] = $shopper;
             }
             $this->dateValidator->addCancelledDate($cancelDate);
+
             return true;
         }
+
         return false;
     }
 
@@ -101,6 +102,7 @@ class Rota
         if (isset($this->currentRota[$this->getDateKey($date->sub($this->interval))])) {
             $previousShopper = $this->currentRota[$this->getDateKey($date->sub($this->interval))];
         }
+
         return $previousShopper;
     }
 
@@ -113,6 +115,7 @@ class Rota
         if ($offset > 0) {
             $rotaDate = new DateTime($rotaDates[$offset-1]);
         }
+
         return $rotaDate;
     }
 
@@ -124,6 +127,7 @@ class Rota
             $rotaDates[] = $date;
         }
         sort($rotaDates);
+
         return $rotaDates;
     }
 

@@ -3,15 +3,24 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Lunchbot\Slack;
 
 class Join implements Command
 {
+    /**
+     * @var RotaManager
+     */
     protected $rotaManager;
-    protected $args = array();
 
-    public function __construct(RotaManager $rotaManager, array $args = array())
+    /**
+     * @var Slack
+     */
+    private $slack;
+
+    public function __construct(RotaManager $rotaManager, Slack $slack)
     {
         $this->rotaManager = $rotaManager;
+        $this->slack = $slack;
     }
 
     public function getUsage()
@@ -19,13 +28,13 @@ class Join implements Command
         return '`join`: Join lunch club';
     }
 
-    public function run()
+    public function run(array $args, $username)
     {
-        if (!isset($this->args['user_name'])) {
+        if (!isset($username)) {
             throw new \RunTimeException('No username found to join');
         }
-        $this->rotaManager->addShopper($_POST['user_name']);
+        $this->rotaManager->addShopper($username);
 
-        return "{$_POST['user_name']} has been added to Lunchclub";
+        $this->slack->send("{$args['user_name']} has been added to Lunchclub");
     }
 }
