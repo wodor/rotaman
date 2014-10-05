@@ -4,7 +4,7 @@ namespace RgpJones\Lunchbot\Command;
 use DateTime;
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Lunchbot\Dispatcher;
 
 class Rota implements Command
 {
@@ -16,14 +16,14 @@ class Rota implements Command
     protected $rotaManager;
 
     /**
-     * @var Slack
+     * @var Dispatcher
      */
-    private $slack;
+    private $dispatcher;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getUsage()
@@ -48,6 +48,6 @@ class Rota implements Command
             $response .= "{$date->format('l')}: {$clubber}\n";
         }
 
-        $this->slack->send($response);
+        $this->dispatcher->send($response);
     }
 }

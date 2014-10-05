@@ -3,7 +3,7 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Lunchbot\Dispatcher;
 
 class Join implements Command
 {
@@ -13,14 +13,14 @@ class Join implements Command
     protected $rotaManager;
 
     /**
-     * @var Slack
+     * @var Dispatcher
      */
-    private $slack;
+    private $dispatcher;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getUsage()
@@ -35,6 +35,6 @@ class Join implements Command
         }
         $this->rotaManager->addShopper($username);
 
-        $this->slack->send("{$args['user_name']} has been added to Lunchclub");
+        $this->dispatcher->send("{$args['user_name']} has been added to Lunchclub");
     }
 }

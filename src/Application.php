@@ -6,6 +6,7 @@ use Pimple\Container;
 use Silex\Application as BaseApplication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use RgpJones\Lunchbot\Dispatcher\Slack;
 
 class Application extends BaseApplication
 {

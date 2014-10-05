@@ -1,9 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Lunchbot\Dispatcher;
 
 use SimpleXMLElement;
+use RgpJones\Lunchbot\Dispatcher;
 
-class Slack
+class Slack implements Dispatcher
 {
     /**
      * @var array

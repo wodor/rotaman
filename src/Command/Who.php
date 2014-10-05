@@ -4,20 +4,20 @@ namespace RgpJones\Lunchbot\Command;
 use DateTime;
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Lunchbot\Dispatcher;
 
 class Who implements Command
 {
     protected $rotaManager;
     /**
-     * @var Slack
+     * @var Dispatcher
      */
-    private $slack;
+    private $dispatcher;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getUsage()
@@ -28,6 +28,6 @@ class Who implements Command
     public function run(array $args, $username)
     {
         $shopper = $this->rotaManager->getShopperForDate(new DateTime());
-        $this->slack->send(sprintf('Today\'s shopper is %s', $shopper));
+        $this->dispatcher->send(sprintf('Today\'s shopper is %s', $shopper));
     }
 }

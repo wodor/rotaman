@@ -3,8 +3,8 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Lunchbot\Dispatcher;
 use DateTime;
-use RgpJones\Lunchbot\Slack;
 
 class Cancel implements Command
 {
@@ -14,14 +14,14 @@ class Cancel implements Command
     protected $rotaManager;
 
     /**
-     * @var Slack
+     * @var Dispatcher
      */
-    private $slack;
+    private $dispatcher;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getUsage()
@@ -41,6 +41,6 @@ class Cancel implements Command
             $message = "Couldn't cancel Lunchclub on ";
         }
 
-        $this->slack->send($message . $date->format('l, jS F Y'));
+        $this->dispatcher->send($message . $date->format('l, jS F Y'));
     }
 }
