@@ -73,6 +73,7 @@ class RotaManager
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)
     {
-        return array_values(array_unique(array_merge($currentRota, $members)));
+        $reverseCurrentRota = array_reverse(array_unique(array_reverse($currentRota)));
+        return array_values(array_unique(array_merge($reverseCurrentRota, $members)));
     }
 }
