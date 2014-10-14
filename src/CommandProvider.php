@@ -16,7 +16,7 @@ class CommandProvider implements ServiceProviderInterface
         $app['commands'] = new Container;
 
         $app['commands']['cancel'] = function () use ($app) {
-            return new Command\Cancel($app['rota_manager'], $app['slack']);
+            return new Command\Cancel($app['rota_manager'], $app['dispatcher']);
         };
 
         $app['commands']['help'] = function () use ($app) {
@@ -24,7 +24,7 @@ class CommandProvider implements ServiceProviderInterface
         };
 
         $app['commands']['join'] = function () use ($app) {
-            return new Command\Join($app['rota_manager'], $app['slack']);
+            return new Command\Join($app['rota_manager'], $app['dispatcher']);
         };
 
         $app['commands']['leave'] = function () use ($app) {
@@ -32,7 +32,7 @@ class CommandProvider implements ServiceProviderInterface
         };
 
         $app['commands']['rota'] = function () use ($app) {
-            return new Command\Rota($app['rota_manager'], $app['slack']);
+            return new Command\Rota($app['rota_manager'], $app['dispatcher']);
         };
 
         $app['commands']['skip'] = function () use ($app) {
@@ -44,7 +44,7 @@ class CommandProvider implements ServiceProviderInterface
         };
 
         $app['commands']['who'] = function () use ($app) {
-            return new Command\Who($app['rota_manager'], $app['slack']);
+            return new Command\Who($app['rota_manager'], $app['dispatcher']);
         };
     }
 }

@@ -25,9 +25,7 @@ class Application extends BaseApplication
             return new Storage($values['storage_file']);
         };
 
-        $app['slack'] = function () use ($app) {
-            return new Slack($app['config'], $app['debug']);
-        };
+        $app['dispatcher'] = $this->getDispatcher($app);
 
         $app->register(new CommandProvider);
 
@@ -46,5 +44,12 @@ class Application extends BaseApplication
                 return new Response($response);
             }
         );
+    }
+
+    protected function getDispatcher($app)
+    {
+        function () use ($app) {
+            return new Slack($app['config'], $app['debug']);
+        };
     }
 }
