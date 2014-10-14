@@ -18,12 +18,19 @@ $config = simplexml_load_file(__DIR__ . '/config.xml');
 
 $slack = true;
 if (!isset($_POST['token']) || $_POST['token'] != (string) $config->token
-    || !isset($_POST['command']) || $_POST['command'] != '/lunchbot'
-    || $_POST['channel_name'] != (string) $config->channel
-    || $_POST['channel_id'] != (string) $config->channel_id) {
-
+    || !isset($_POST['command']) || $_POST['command'] != '/lunchbot') {
     $slack = false;
 }
+
+if (!in_array($_POST['channel_id'], array((string) $config->channel_id, (string) $config->channel_id_test))) {
+    throw new RunTimException('Invalid channel source');
+}
+
+$testMode = true;
+if ($_POST['channel_id'] == (string) $config->channel_id) {
+    $testMode = false;
+}
+
 /**
  * [token] => ...
  * [team_id] => ...
@@ -34,6 +41,7 @@ if (!isset($_POST['token']) || $_POST['token'] != (string) $config->token
  * [command] => ...
  * [text] => ...
  */
+
 $command = 'help';
 if ($slack) {
     $argv = explode(' ', trim($_POST['text']));
@@ -60,6 +68,10 @@ if (!is_null($response)) {
         $content['username'] = 'Lunchbot';
         $content['text'] = $response;
         $content['icon_emoji'] = ':sandwich:';
+
+        if ($testMode) {
+             $content['channel'] = (string) $config->channel_id_test;
+        }
 
         $payload = sprintf("payload=%s", json_encode($content));
 
