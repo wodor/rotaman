@@ -31,8 +31,8 @@ class Cancel implements Command
 
     public function run(array $args, $username)
     {
-        $date = isset($args[1])
-            ? new DateTime($args[1])
+        $date = isset($args[0])
+            ? new DateTime($args[0])
             : new DateTime();
 
         if ($this->rotaManager->cancelOnDate($date)) {

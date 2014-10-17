@@ -33,8 +33,8 @@ class Rota implements Command
 
     public function run(array $args, $username)
     {
-        $days = isset($args[1])
-            ? $args[1]
+        $days = isset($args[0])
+            ? $args[0]
             : count($this->rotaManager->getShoppers());
 
         if ($days > self::MAX_DAYS) {
