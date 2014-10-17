@@ -46,6 +46,11 @@ class Application extends BaseApplication
         );
     }
 
+    protected function getArgs()
+    {
+
+    }
+
     protected function getDispatcher($app)
     {
         function () use ($app) {
