@@ -7,9 +7,8 @@ use RgpJones\Lunchbot\RotaManager;
 class Swap implements Command
 {
     protected $rotaManager;
-    protected $args = array();
 
-    public function __construct(RotaManager $rotaManager, array $args = array())
+    public function __construct(RotaManager $rotaManager)
     {
         $this->rotaManager = $rotaManager;
     }
@@ -19,7 +18,7 @@ class Swap implements Command
         return '`swap` <name>: Swap shopping duty with <name> (to-do)';
     }
 
-    public function run()
+    public function run(array $args, $username)
     {
 
     }

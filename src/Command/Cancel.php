@@ -4,16 +4,24 @@ namespace RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
 use DateTime;
+use RgpJones\Lunchbot\Slack;
 
 class Cancel implements Command
 {
+    /**
+     * @var RotaManager
+     */
     protected $rotaManager;
-    protected $args = [];
 
-    public function __construct(RotaManager $rotaManager, array $args = [])
+    /**
+     * @var Slack
+     */
+    private $slack;
+
+    public function __construct(RotaManager $rotaManager, Slack $slack)
     {
         $this->rotaManager = $rotaManager;
-        $this->args = $args;
+        $this->slack = $slack;
     }
 
     public function getUsage()
@@ -21,10 +29,10 @@ class Cancel implements Command
         return '`cancel` [date]: Cancel lunchclub for today, or on date specified';
     }
 
-    public function run()
+    public function run(array $args, $username)
     {
-        $date = isset($this->args[1])
-            ? new DateTime($this->args[1])
+        $date = isset($args[1])
+            ? new DateTime($args[1])
             : new DateTime();
 
         if ($this->rotaManager->cancelOnDate($date)) {
@@ -33,6 +41,6 @@ class Cancel implements Command
             $message = "Couldn't cancel Lunchclub on ";
         }
 
-        return $message . $date->format('l, jS F Y');
+        $this->slack->send($message . $date->format('l, jS F Y'));
     }
 }

@@ -7,9 +7,8 @@ use RgpJones\Lunchbot\RotaManager;
 class Leave implements Command
 {
     protected $rotaManager;
-    protected $args = array();
 
-    public function __construct(RotaManager $rotaManager, array $args = array())
+    public function __construct(RotaManager $rotaManager)
     {
         $this->rotaManager = $rotaManager;
     }
@@ -19,7 +18,7 @@ class Leave implements Command
         return '`leave`: Leave lunch club (to-do)';
     }
 
-    public function run()
+    public function run(array $args, $username)
     {
 
     }

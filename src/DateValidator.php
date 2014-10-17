@@ -20,8 +20,10 @@ class DateValidator
     {
         if ($this->isDateValid($date)) {
             $this->cancelledDates[] = $date->format('Y-m-d');
+
             return true;
         }
+
         return false;
     }
 
@@ -50,6 +52,7 @@ class DateValidator
         while (!$this->isDateValid($date)) {
             $date->sub($this->interval);
         }
+
         return $date;
     }
 }
