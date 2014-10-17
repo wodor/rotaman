@@ -9,12 +9,14 @@ if (!in_array($_POST['channel_id'], array((string) $config->channel_id, (string)
     throw new RunTimException('Invalid channel source');
 }
 
-$config->addChild('testMode', $_POST['channel_id'] != (string) $config->channel_id);
+$testMode = (int) ($_POST['channel_id'] != (string) $config->channel_id);
+$config->addChild('testMode', $testMode);
+$storageFile = $testMode ? __DIR__ . '/.lunchbot-test' : __DIR__ . '/.lunchbot';
 
 $app = new Application(
     [
         'config'       => $config,
-        'storage_file' => __DIR__ . '/.lunchbot',
+        'storage_file' => $storageFile,
     ]
 );
 $app->run();

@@ -25,7 +25,7 @@ class Slack
         $content['text'] = $message;
         $content['icon_emoji'] = ':sandwich:';
 
-        if ((bool) $this->config->testMode) {
+        if ($this->config->testMode) {
             $content['channel'] = (string) $this->config->channel_id_test;
         }
 
