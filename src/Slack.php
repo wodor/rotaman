@@ -1,7 +1,7 @@
 <?php
 namespace RgpJones\Lunchbot;
 
-use stdClass;
+use SimpleXMLElement;
 
 class Slack
 {
@@ -13,7 +13,7 @@ class Slack
     private $debug;
     private $messages;
 
-    public function __construct(stdClass $config, $debug = false)
+    public function __construct(SimpleXMLElement $config, $debug = false)
     {
         $this->config = $config;
         $this->debug = $debug;
