@@ -175,4 +175,37 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldReturn($nextRota);
     }
+
+    function it_swaps_shoppers_on_dates_specified(Storage $storage)
+    {
+        $updatedRota = [
+            '2010-01-01' => 'Chris',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Alice',
+            '2010-01-06' => 'Dave',
+        ];
+
+        $storage->load()->willReturn([
+            'members' => ['Alice', 'Bob', 'Chris', 'Dave'],
+            'cancelledDates' => [],
+            'rota' => [
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Bob',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Dave'
+            ]
+        ]);
+        $storage->save([
+            'members' => ['Alice', 'Bob', 'Chris', 'Dave'],
+            'cancelledDates' => [],
+            'rota' => $updatedRota
+        ])->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->swapShopperByDate(
+            new \DateTime('2010-01-05'),
+            new \DateTime('2010-01-01')
+        )->shouldReturn($updatedRota);
+    }
 }

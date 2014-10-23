@@ -70,6 +70,11 @@ class RotaManager
         return $this->rota->cancelOnDate($date);
     }
 
+    public function swapShopperByDate(DateTime $toDate, DateTime $fromDate)
+    {
+        return $this->rota->swapShopperByDate($toDate, $fromDate);
+    }
+
     protected function getMembersInRotaOrder(array $members, array $currentRota)
     {
         $reverseCurrentRota = array_reverse(array_unique(array_reverse($currentRota)));

@@ -26,7 +26,7 @@ class Cancel implements Command
 
     public function getUsage()
     {
-        return '`cancel` [date]: Cancel lunchclub for today, or on date specified';
+        return '`cancel` [date]: Cancel lunchclub for today, or on date specified (Y-m-d)';
     }
 
     public function run(array $args, $username)

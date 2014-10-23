@@ -137,7 +137,7 @@ class Rota
         return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 
-    public function swapShopperByDate(DateTime $fromDate, DateTime $toDate)
+    public function swapShopperByDate(DateTime $toDate, DateTime $fromDate)
     {
         if (!isset($this->currentRota[$fromDate->format('Y-m-d')])) {
             throw new InvalidArgumentException('Specified From date ' . $fromDate->format('Y-m-d') . ' is invalid');
@@ -152,5 +152,7 @@ class Rota
 
         $this->currentRota[$fromDate->format('Y-m-d')] = $toShopper;
         $this->currentRota[$toDate->format('Y-m-d')] = $fromShopper;
+
+        return $this->currentRota;
     }
 }

@@ -179,12 +179,12 @@ class RotaSpec extends ObjectBehavior
             ]
         );
 
-        $this->swapShopperByDate(new \DateTime('2010-01-04'), new \DateTime('2010-01-06'));
-        $this->getCurrentRota()->shouldReturn([
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Dave',
-            '2010-01-05' => 'Chris',
-            '2010-01-06' => 'Bob',
-        ]);
+        $this->swapShopperByDate(new \DateTime('2010-01-06'), new \DateTime('2010-01-04'))
+            ->shouldReturn([
+                '2010-01-01' => 'Alice',
+                '2010-01-04' => 'Dave',
+                '2010-01-05' => 'Chris',
+                '2010-01-06' => 'Bob',
+            ]);
     }
 }
