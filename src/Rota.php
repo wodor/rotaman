@@ -3,6 +3,7 @@ namespace RgpJones\Lunchbot;
 
 use DateInterval;
 use DateTime;
+use InvalidArgumentException;
 
 class Rota
 {
@@ -136,8 +137,20 @@ class Rota
         return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 
-    public function swapShopper($argument1, $argument2)
+    public function swapShopperByDate(DateTime $fromDate, DateTime $toDate)
     {
-        // TODO: write logic here
+        if (!isset($this->currentRota[$fromDate->format('Y-m-d')])) {
+            throw new InvalidArgumentException('Specified From date ' . $fromDate->format('Y-m-d') . ' is invalid');
+        }
+
+        if (!isset($this->currentRota[$toDate->format('Y-m-d')])) {
+            throw new InvalidArgumentException('Specified To date ' . $toDate->format('Y-m-d') . ' is invalid');
+        }
+
+        $fromShopper = $this->currentRota[$fromDate->format('Y-m-d')];
+        $toShopper = $this->currentRota[$toDate->format('Y-m-d')];
+
+        $this->currentRota[$fromDate->format('Y-m-d')] = $toShopper;
+        $this->currentRota[$toDate->format('Y-m-d')] = $fromShopper;
     }
 }
