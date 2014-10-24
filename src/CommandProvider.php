@@ -40,7 +40,7 @@ class CommandProvider implements ServiceProviderInterface
         };
 
         $app['commands']['swap'] = function () use ($app) {
-            return new Command\Swap($app['rota_manager']);
+            return new Command\Swap($app['rota_manager'], $app['slack']);
         };
 
         $app['commands']['who'] = function () use ($app) {
