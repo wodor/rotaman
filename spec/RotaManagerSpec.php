@@ -196,7 +196,7 @@ class RotaManagerSpec extends ObjectBehavior
             ]
         ]);
         $storage->save([
-            'members' => ['Alice', 'Bob', 'Chris', 'Dave'],
+            'members' => ['Chris', 'Bob', 'Alice', 'Dave'],
             'cancelledDates' => [],
             'rota' => $updatedRota
         ])->willReturn(null);

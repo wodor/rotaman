@@ -24,7 +24,7 @@ class RotaManager
         $members = isset($data['members']) ? $data['members'] : [];
 
         // Maintains shoppers in order as they are in current rota
-        $this->shopper = new Shopper($this->getMembersInRotaOrder($members, $currentRota));
+        $this->shopper = $this->getShopperEntity($members, $currentRota);
         $this->dateValidator = new DateValidator($cancelledDates);
         $this->rota = new Rota($this->shopper, $this->dateValidator, $currentRota);
     }
@@ -72,7 +72,14 @@ class RotaManager
 
     public function swapShopperByDate(DateTime $toDate, DateTime $fromDate)
     {
-        return $this->rota->swapShopperByDate($toDate, $fromDate);
+        $rota = $this->rota->swapShopperByDate($toDate, $fromDate);
+        $this->shopper = $this->getShopperEntity($this->shopper->getShoppers(), $rota);
+        return $rota;
+    }
+
+    protected function getShopperEntity($shoppers, $rota)
+    {
+        return new Shopper($this->getMembersInRotaOrder($shoppers, $rota));
     }
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)
