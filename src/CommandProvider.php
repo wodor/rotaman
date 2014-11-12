@@ -31,6 +31,10 @@ class CommandProvider implements ServiceProviderInterface
             return new Command\Leave($app['rota_manager']);
         };
 
+        $app['commands']['paid'] = function () use ($app) {
+            return new Command\Paid($app['rota_manager']);
+        };
+
         $app['commands']['rota'] = function () use ($app) {
             return new Command\Rota($app['rota_manager'], $app['slack']);
         };

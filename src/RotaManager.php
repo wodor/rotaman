@@ -13,6 +13,8 @@ class RotaManager
 
     private $shopper;
 
+    private $paymentCalendar;
+
     public function __construct(Storage $storage)
     {
         $this->storage = $storage;
@@ -22,11 +24,13 @@ class RotaManager
         $currentRota = isset($data['rota']) ? $data['rota'] : [];
         $cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
         $members = isset($data['members']) ? $data['members'] : [];
+        $paymentCalendar = isset($data['paymentCalendar']) ? $data['paymentCalendar'] : [];
 
         // Maintains shoppers in order as they are in current rota
         $this->shopper = $this->getShopperEntity($members, $currentRota);
         $this->dateValidator = new DateValidator($cancelledDates);
         $this->rota = new Rota($this->shopper, $this->dateValidator, $currentRota);
+        $this->paymentCalendar =  new PaymentCalendar($paymentCalendar);
     }
 
     public function __destruct()
@@ -35,7 +39,8 @@ class RotaManager
             $this->storage->save([
                 'members' => $this->shopper->getShoppers(),
                 'cancelledDates' => $this->dateValidator->getCancelledDates(),
-                'rota' => $this->rota->getCurrentRota()
+                'rota' => $this->rota->getCurrentRota(),
+                'paymentCalendar' => $this->paymentCalendar->getPaymentCalendar(),
             ]);
         }
     }
@@ -75,6 +80,11 @@ class RotaManager
         $rota = $this->rota->swapShopperByDate($toDate, $fromDate);
         $this->shopper = $this->getShopperEntity($this->shopper->getShoppers(), $rota);
         return $rota;
+    }
+
+    public function shopperPaidForDate(DateTime $date, $shopper, $amount)
+    {
+        return $this->paymentCalendar->shopperPaidForDate($date, $shopper, $amount);
     }
 
     protected function getShopperEntity($shoppers, $rota)
