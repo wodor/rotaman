@@ -8,15 +8,20 @@ use RgpJones\Lunchbot\Slack;
 
 class Paid implements Command
 {
-    const DEFAULT_AMOUNT = 30.00;
     /**
      * @var RotaManager
      */
     protected $rotaManager;
 
-    public function __construct(RotaManager $rotaManager)
+    /**
+     * @var \RgpJones\Lunchbot\Slack
+     */
+    protected $slack;
+
+    public function __construct(RotaManager $rotaManager, Slack $slack)
     {
         $this->rotaManager = $rotaManager;
+        $this->slack = $slack;
     }
 
     public function getUsage()
@@ -27,14 +32,32 @@ class Paid implements Command
 
     public function run(array $args, $username)
     {
-        $amount = isset($args[0]) ? $args[0] : self::DEFAULT_AMOUNT;
+        $amount = null;
+        if (isset($args[0])) {
+            $amount = $this->checkAmount($args[0]);
+        }
 
-        if ($this->rotaManager->shopperPaid(new DateTime(), $username, $amount)) {
-            $response = 'Recorded as paid';
+        if ($amount) {
+            if ($this->rotaManager->shopperPaidForDate(new DateTime(), $username, $amount)) {
+                $response = 'Recorded as paid';
+            } else {
+                $response = "Failed to record as paid without an error";
+            }
         } else {
-            $response = "Failed to record as paid without an error";
+            $response = sprintf(
+                'You have paid £%02f this month',
+                $this->rotaManager->getShopperPaidAmountForDate(new DateTime(), $username)
+            );
         }
 
         return $response;
+    }
+
+    protected function checkAmount($amount)
+    {
+        if (!is_numeric($amount) || $amount <= 0) {
+            throw new \InvalidArgumentException('You must provide a valid amount for payment');
+        }
+        return $amount;
     }
 }

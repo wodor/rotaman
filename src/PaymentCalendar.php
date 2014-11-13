@@ -30,6 +30,15 @@ class PaymentCalendar
         return true;
     }
 
+    public function getAmountShopperPaidForDate(DateTime $date, $shopper)
+    {
+        $amount = 0;
+        if (isset($this->paymentCalendar[$this->getDateKey($date)][$shopper])) {
+            $amount = $this->paymentCalendar[$this->getDateKey($date)][$shopper];
+        }
+        return $amount;
+    }
+
     protected function getDateKey(DateTime $date)
     {
         return $date->format('Y-m');

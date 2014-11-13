@@ -260,4 +260,33 @@ class RotaManagerSpec extends ObjectBehavior
             (float) 20.00
         )->shouldReturn(true);
     }
+
+    function it_returns_amount_shopper_as_paid(Storage $storage)
+    {
+        $storage->load()->willReturn([
+            'paymentCalendar' => [
+                '2010-03' => [
+                    'Alice' => (float) 20.00,
+                ]
+            ]
+        ]);
+
+        $storage->save([
+            'members' => [],
+            'cancelledDates' => [],
+            'rota' => [],
+            'paymentCalendar' => [
+                '2010-03' => [
+                    'Alice' => (float) 20.00,
+                ]
+            ]
+        ])->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->getAmountShopperPaidForDate(
+            new \DateTime('2010-03-16'),
+            'Alice'
+        )->shouldReturn(20.00);
+    }
 }

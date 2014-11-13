@@ -82,6 +82,11 @@ class RotaManager
         return $rota;
     }
 
+    public function getAmountShopperPaidForDate($date, $shopper)
+    {
+        return $this->paymentCalendar->getAmountShopperPaidForDate($date, $shopper);
+    }
+
     public function shopperPaidForDate(DateTime $date, $shopper, $amount)
     {
         return $this->paymentCalendar->shopperPaidForDate($date, $shopper, $amount);

@@ -21,6 +21,19 @@ class PaymentCalendarSpec extends ObjectBehavior
         $this->getPaymentCalendar()->shouldReturn($currentCalendar);
     }
 
+    function it_returns_amount_shopper_paid_for_month()
+    {
+        $currentCalendar = [
+            '2011-08' => [
+                'Bob' => 15.00
+            ]
+        ];
+
+        $this->beConstructedWith($currentCalendar);
+
+        $this->getAmountShopperPaidForDate(new \DateTime('2011-08-31'), 'Bob')->shouldReturn(15.00);
+    }
+
     function it_returns_payment_calendar_with_new_paid_shopper()
     {
         $currentCalendar = [
