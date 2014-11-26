@@ -20,9 +20,8 @@ class Paid implements Command
 
     public function getUsage()
     {
-        return '`paid` [amount] <date>: Mark yourself as having paid for the current month. If amount is less than the '
-            . 'full amount, also specify [amount] paid. Specify <date> of month if not for current month. e.g. '
-            . '2014-12-01 for December';
+        return '`paid` [amount] <date>: Mark yourself as having paid [amount] for the current month. Specify <date> of '
+            . 'month if not for current month. e.g. 2014-12-01 for December';
     }
 
     public function run(array $args, $username)
