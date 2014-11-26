@@ -41,7 +41,9 @@ class PaymentCalendar
 
     public function getWhoPaidForDate(DateTime $date)
     {
-        return array_keys($this->paymentCalendar[$this->getDateKey($date)]);
+        return isset($this->paymentCalendar[$this->getDateKey($date)])
+            ? array_keys($this->paymentCalendar[$this->getDateKey($date)])
+            : [];
     }
 
     protected function getDateKey(DateTime $date)
