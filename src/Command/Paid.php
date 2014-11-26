@@ -20,7 +20,7 @@ class Paid implements Command
 
     public function getUsage()
     {
-        return '`paid` [amount] <date>: Mark yourself as having paid [amount] for the current month. Specify <date> of '
+        return '`paid` <amount> [date]: Mark yourself as having paid <amount> for the current month. Specify [date] of '
             . 'month if not for current month. e.g. 2014-12-01 for December';
     }
 
