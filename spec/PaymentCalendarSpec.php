@@ -80,4 +80,26 @@ class PaymentCalendarSpec extends ObjectBehavior
 
         $this->getPaymentCalendar()->shouldReturn($newCalendar);
     }
+
+    function it_returns_who_paid_for_date()
+    {
+        $calendar = [
+            '2008-05' => [
+                'Alice' => 20.00,
+                'Bob' => 20.00
+            ],
+            '2008-06' => [
+                'Alice' => 20.00,
+                'Bob' => 15.00
+            ],
+            '2008-07' => [
+                'Alice' => 5.00,
+                'Bob' => 10.00
+            ]
+        ];
+
+        $this->beConstructedWith($calendar);
+
+        $this->getWhoPaidForDate(new \DateTime('2008-06-16'))->shouldReturn(['Alice', 'Bob']);
+    }
 }

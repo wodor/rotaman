@@ -92,6 +92,13 @@ class RotaManager
         return $this->paymentCalendar->shopperPaidForDate($date, $shopper, $amount);
     }
 
+    public function getWhoPaidForDate(DateTime $date)
+    {
+        return $this->paymentCalendar->getWhoPaidForDate($date);
+    }
+
+
+
     protected function getShopperEntity($shoppers, $rota)
     {
         return new Shopper($this->getMembersInRotaOrder($shoppers, $rota));

@@ -39,6 +39,11 @@ class PaymentCalendar
         return $amount;
     }
 
+    public function getWhoPaidForDate(DateTime $date)
+    {
+        return array_keys($this->paymentCalendar[$this->getDateKey($date)]);
+    }
+
     protected function getDateKey(DateTime $date)
     {
         return $date->format('Y-m');

@@ -50,5 +50,9 @@ class CommandProvider implements ServiceProviderInterface
         $app['commands']['who'] = function () use ($app) {
             return new Command\Who($app['rota_manager'], $app['slack']);
         };
+
+        $app['commands']['whopaid'] = function () use ($app) {
+            return new Command\Whopaid($app['rota_manager'], $app['slack']);
+        };
     }
 }

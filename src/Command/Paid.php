@@ -36,7 +36,7 @@ class Paid implements Command
 
         if ($amount) {
             if ($this->rotaManager->shopperPaidForDate($date, $username, $amount)) {
-                $response = 'Recorded as paid';
+                $response = sprintf('Your payment of £%.02f has been recorded', $amount);
             } else {
                 $response = "Failed to record as paid without an error";
             }
