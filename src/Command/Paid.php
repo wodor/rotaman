@@ -13,21 +13,16 @@ class Paid implements Command
      */
     protected $rotaManager;
 
-    /**
-     * @var \RgpJones\Lunchbot\Slack
-     */
-    protected $slack;
-
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
     }
 
     public function getUsage()
     {
-        return '`paid` [amount]: Mark yourself as having paid for the current month. If amount is less than the full '
-            . 'amount, also specify [amount] paid.';
+        return '`paid` [amount] <date>: Mark yourself as having paid for the current month. If amount is less than the '
+            . 'full amount, also specify [amount] paid. Specify <date> of month if not for current month. e.g. '
+            . '2014-12-01 for December';
     }
 
     public function run(array $args, $username)
@@ -37,16 +32,18 @@ class Paid implements Command
             $amount = $this->checkAmount($args[0]);
         }
 
+        $date = (isset($args[1]) ? new DateTime($args[1]) : new DateTime());
+
         if ($amount) {
-            if ($this->rotaManager->shopperPaidForDate(new DateTime(), $username, $amount)) {
+            if ($this->rotaManager->shopperPaidForDate($date, $username, $amount)) {
                 $response = 'Recorded as paid';
             } else {
                 $response = "Failed to record as paid without an error";
             }
         } else {
             $response = sprintf(
-                'You have paid £%02f this month',
-                $this->rotaManager->getShopperPaidAmountForDate(new DateTime(), $username)
+                'You have paid £%.02f this month',
+                $this->rotaManager->getAmountShopperPaidForDate(new DateTime(), $username)
             );
         }
 
@@ -55,6 +52,7 @@ class Paid implements Command
 
     protected function checkAmount($amount)
     {
+        $amount = str_replace('£', '', $amount);
         if (!is_numeric($amount) || $amount <= 0) {
             throw new \InvalidArgumentException('You must provide a valid amount for payment');
         }
