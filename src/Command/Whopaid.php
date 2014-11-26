@@ -34,7 +34,7 @@ class Whopaid implements Command
 
         $paidShoppers = $this->rotaManager->getWhoPaidForDate($date);
         $this->slack->send(
-            "Lunchclub payments for " . $date->format('%F')
+            "Lunchclub payments for " . $date->format('F') . ":\n"
                 . $this->formatWhoPaid($paidShoppers)
         );
     }
