@@ -28,8 +28,15 @@ class Whopaid implements Command
 
     public function run(array $args, $username)
     {
-        $paidShoppers = $this->rotaManager->getWhoPaidForDate(new DateTime());
-        $this->slack->send($this->formatWhoPaid($paidShoppers));
+        $date = isset($args[0])
+            ? new DateTime($args[0])
+            : new DateTime();
+
+        $paidShoppers = $this->rotaManager->getWhoPaidForDate($date);
+        $this->slack->send(
+            "Lunchclub payments for " . $date->format('%F')
+                . $this->formatWhoPaid($paidShoppers)
+        );
     }
 
     protected function formatWhoPaid($paidShoppers)
