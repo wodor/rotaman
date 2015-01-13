@@ -16,7 +16,7 @@ class RotaSpec extends ObjectBehavior
             new DateValidator()
         );
 
-        $this->generate(new \DateTime('2010-01-11'), 5)->shouldReturn(
+        $this->generate(new \DateTime('2010-01-11'), 5)->shouldBeLike(
             [
                 '2010-01-11' => 'Alice',
                 '2010-01-12' => 'Bob',
@@ -34,7 +34,7 @@ class RotaSpec extends ObjectBehavior
             new DateValidator()
         );
 
-        $this->generate(new \DateTime('2010-01-01'), 5)->shouldReturn(
+        $this->generate(new \DateTime('2010-01-01'), 5)->shouldBeLike(
             [
                 '2010-01-01' => 'Alice',
                 '2010-01-04' => 'Bob',
@@ -82,7 +82,7 @@ class RotaSpec extends ObjectBehavior
 
         $this->beConstructedWith(new ShopperCollection($clubbers), new DateValidator(), $currentRota);
 
-        $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
+        $this->generate(new \DateTime('2010-01-01'), 10)->shouldBeLike($expectedRota);
     }
 
     function it_skips_current_user_and_realigns_rota()
@@ -99,7 +99,7 @@ class RotaSpec extends ObjectBehavior
         );
 
         $this->skipShopperForDate(new \DateTime('2010-01-04'));
-        $this->getCurrentRota()->shouldReturn([
+        $this->getCurrentRota()->shouldBeLike([
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Chris',
             '2010-01-05' => 'Dave',

@@ -42,7 +42,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->generateRota(new \DateTime('2010-01-01'), 3)->shouldReturn($expectedRota);
+        $this->generateRota(new \DateTime('2010-01-01'), 3)->shouldBeLike($expectedRota);
     }
 
     function it_maintains_order_of_members_in_rota(Storage $storage)
@@ -78,7 +78,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
+        $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldBeLike($expectedRota);
     }
 
     function it_returns_shopper_for_date(Storage $storage)
@@ -193,7 +193,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldReturn($nextRota);
+        $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldBeLike($nextRota);
     }
 
     function it_swaps_shoppers_on_dates_specified(Storage $storage)
