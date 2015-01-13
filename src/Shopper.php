@@ -1,7 +1,9 @@
 <?php
 namespace RgpJones\Lunchbot;
 
-class Shopper
+use JsonSerializable;
+
+class Shopper implements JsonSerializable
 {
     protected $name;
 
@@ -13,5 +15,10 @@ class Shopper
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->__toString();
     }
 }
