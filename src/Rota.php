@@ -7,7 +7,7 @@ use InvalidArgumentException;
 
 class Rota
 {
-    private $shopper;
+    private $shoppers;
 
     private $interval;
 
@@ -15,9 +15,9 @@ class Rota
 
     private $dateValidator;
 
-    public function __construct(ShopperCollection $shopper, DateValidator $dateValidator, array $currentRota = array())
+    public function __construct(ShopperCollection $shoppers, DateValidator $dateValidator, array $currentRota = array())
     {
-        $this->shopper = $shopper;
+        $this->shoppers = $shoppers;
         $this->interval = new DateInterval('P1D');
         $this->dateValidator = $dateValidator;
         $this->currentRota = $currentRota;
@@ -28,7 +28,7 @@ class Rota
         // Sets current shopper to the shopper for the previous time lunchclub ran
         $previousDate = $this->getPreviousRotaDate($date);
         if (!is_null($previousDate)) {
-            $this->shopper->setCurrentShopper($this->currentRota[$previousDate->format('Y-m-d')]);
+            $this->shoppers->setCurrentShopper($this->currentRota[$previousDate->format('Y-m-d')]);
         }
 
         $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
@@ -89,11 +89,11 @@ class Rota
     {
         if (isset($this->currentRota[$this->getDateKey($date)])) {
             $shopper = $this->currentRota[$this->getDateKey($date)];
-            $this->shopper->setCurrentShopper($this->currentRota[$this->getDateKey($date)]);
+            $this->shoppers->setCurrentShopper($this->currentRota[$this->getDateKey($date)]);
 
             return $shopper;
         } else {
-            return $this->shopper->next();
+            return $this->shoppers->next();
         }
     }
 
