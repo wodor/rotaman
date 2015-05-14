@@ -31,6 +31,10 @@ class CommandProvider implements ServiceProviderInterface
             return new Command\Leave($app['rota_manager']);
         };
 
+        $app['commands']['paid'] = function () use ($app) {
+            return new Command\Paid($app['rota_manager']);
+        };
+
         $app['commands']['rota'] = function () use ($app) {
             return new Command\Rota($app['rota_manager'], $app['dispatcher']);
         };
@@ -40,11 +44,15 @@ class CommandProvider implements ServiceProviderInterface
         };
 
         $app['commands']['swap'] = function () use ($app) {
-            return new Command\Swap($app['rota_manager']);
+            return new Command\Swap($app['rota_manager'], $app['slack']);
         };
 
         $app['commands']['who'] = function () use ($app) {
             return new Command\Who($app['rota_manager'], $app['dispatcher']);
+        };
+
+        $app['commands']['whopaid'] = function () use ($app) {
+            return new Command\Whopaid($app['rota_manager'], $app['slack']);
         };
     }
 }

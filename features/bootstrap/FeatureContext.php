@@ -32,7 +32,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function setup()
     {
-        $this->config = new stdclass();
+        $this->config = new SimpleXMLElement('<config/>');
         $this->config->webhook = 'http://example.com';
         $this->storage = tempnam(sys_get_temp_dir(), 'LC');
 
