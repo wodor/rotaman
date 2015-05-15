@@ -116,7 +116,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function iShouldSeeInTheChannel(PyStringNode $string)
     {
-        $messages = $this->application['slack']->getMessages();
+        $messages = $this->application['forwarder']->getMessages();
 
         if (strpos($messages[0], (string) $string) === false) {
             throw new Exception(sprintf('Expected %s but got %s', $string, $messages[0]));
