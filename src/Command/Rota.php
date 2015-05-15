@@ -4,7 +4,7 @@ namespace RgpJones\Lunchbot\Command;
 use DateTime;
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Dispatcher;
+use RgpJones\Lunchbot\Forwarder;
 
 class Rota implements Command
 {
@@ -16,14 +16,14 @@ class Rota implements Command
     protected $rotaManager;
 
     /**
-     * @var Dispatcher
+     * @var Forwarder
      */
-    private $dispatcher;
+    private $forwarder;
 
-    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
+    public function __construct(RotaManager $rotaManager, Forwarder $forwarder)
     {
         $this->rotaManager = $rotaManager;
-        $this->dispatcher = $dispatcher;
+        $this->forwarder = $forwarder;
     }
 
     public function getUsage()
@@ -48,6 +48,6 @@ class Rota implements Command
             $response .= "{$date->format('l')}: {$clubber}\n";
         }
 
-        $this->dispatcher->send($response);
+        $this->forwarder->send($response);
     }
 }

@@ -3,7 +3,7 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Dispatcher;
+use RgpJones\Lunchbot\Forwarder;
 
 class Join implements Command
 {
@@ -13,14 +13,14 @@ class Join implements Command
     protected $rotaManager;
 
     /**
-     * @var Dispatcher
+     * @var Forwarder
      */
-    private $dispatcher;
+    private $forwarder;
 
-    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
+    public function __construct(RotaManager $rotaManager, Forwarder $forwarder)
     {
         $this->rotaManager = $rotaManager;
-        $this->dispatcher = $dispatcher;
+        $this->forwarder = $forwarder;
     }
 
     public function getUsage()
@@ -35,6 +35,6 @@ class Join implements Command
         }
         $this->rotaManager->addShopper($username);
 
-        $this->dispatcher->send("{$args['user_name']} has been added to Lunchclub");
+        $this->forwarder->send("{$args['user_name']} has been added to Lunchclub");
     }
 }

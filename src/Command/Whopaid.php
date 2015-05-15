@@ -4,7 +4,7 @@ namespace RgpJones\Lunchbot\Command;
 use DateTime;
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Lunchbot\Forwarder;
 
 class Whopaid implements Command
 {
@@ -12,12 +12,12 @@ class Whopaid implements Command
     /**
      * @var Slack
      */
-    private $slack;
+    private $forwarder;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Forwarder $forwarder)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->forwarder = $forwarder;
     }
 
     public function getUsage()
@@ -33,7 +33,7 @@ class Whopaid implements Command
             : new DateTime();
 
         $paidShoppers = $this->rotaManager->getWhoPaidForDate($date);
-        $this->slack->send(
+        $this->forwarder->send(
             "Lunchclub payments for " . $date->format('F') . ":\n"
                 . $this->formatWhoPaid($paidShoppers)
         );

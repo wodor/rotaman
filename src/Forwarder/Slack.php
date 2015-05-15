@@ -1,10 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot\Dispatcher;
+namespace RgpJones\Lunchbot\Forwarder;
 
 use SimpleXMLElement;
-use RgpJones\Lunchbot\Dispatcher;
+use RgpJones\Lunchbot\Forwarder;
 
-class Slack implements Dispatcher
+class Slack implements Forwarder
 {
     /**
      * @var array
@@ -14,10 +14,14 @@ class Slack implements Dispatcher
     private $debug;
     private $messages;
 
-    public function __construct(SimpleXMLElement $config, $debug = false)
+    public function __construct(\SimpleXMLElement $config)
     {
         $this->config = $config;
-        $this->debug = $debug;
+    }
+
+    public function setDebug($boolean)
+    {
+        $this->debug = (bool) $boolean;
     }
 
     public function send($message)

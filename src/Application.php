@@ -6,7 +6,6 @@ use Pimple\Container;
 use Silex\Application as BaseApplication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use RgpJones\Lunchbot\Dispatcher\Slack;
 
 class Application extends BaseApplication
 {
@@ -25,7 +24,7 @@ class Application extends BaseApplication
             return new Storage($values['storage_file']);
         };
 
-        $app['dispatcher'] = $this->getDispatcher($app);
+        $app['forwarder']->setDebug($app['debug']);
 
         $app->register(new CommandProvider);
 
@@ -49,12 +48,5 @@ class Application extends BaseApplication
     protected function getArgs()
     {
 
-    }
-
-    protected function getDispatcher($app)
-    {
-        function () use ($app) {
-            return new Slack($app['config'], $app['debug']);
-        };
     }
 }

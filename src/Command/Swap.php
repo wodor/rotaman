@@ -3,18 +3,18 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Lunchbot\Forwarder;
 use DateTime;
 
 class Swap implements Command
 {
     protected $rotaManager;
-    protected $slack;
+    protected $forwarder;
 
-    public function __construct(RotaManager $rotaManager, Slack $slack)
+    public function __construct(RotaManager $rotaManager, Forwarder $forwarder)
     {
         $this->rotaManager = $rotaManager;
-        $this->slack = $slack;
+        $this->forwarder = $forwarder;
     }
 
     public function getUsage()
@@ -35,7 +35,7 @@ class Swap implements Command
 
         $this->rotaManager->swapShopperByDate($toDate, $fromDate);
 
-        $this->slack->send("Shoppers swapped for dates {$fromDate->format('l, jS F Y')} and "
+        $this->forwarder->send("Shoppers swapped for dates {$fromDate->format('l, jS F Y')} and "
             . "{$toDate->format('l, jS F Y')}");
     }
 }

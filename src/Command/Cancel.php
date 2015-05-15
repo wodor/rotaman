@@ -3,7 +3,7 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Dispatcher;
+use RgpJones\Lunchbot\Forwarder;
 use DateTime;
 
 class Cancel implements Command
@@ -14,14 +14,14 @@ class Cancel implements Command
     protected $rotaManager;
 
     /**
-     * @var Dispatcher
+     * @var Forwarder
      */
-    private $dispatcher;
+    private $forwarder;
 
-    public function __construct(RotaManager $rotaManager, Dispatcher $dispatcher)
+    public function __construct(RotaManager $rotaManager, Forwarder $forwarder)
     {
         $this->rotaManager = $rotaManager;
-        $this->dispatcher = $dispatcher;
+        $this->forwarder = $forwarder;
     }
 
     public function getUsage()
@@ -41,6 +41,6 @@ class Cancel implements Command
             $message = "Couldn't cancel Lunchclub on ";
         }
 
-        $this->dispatcher->send($message . $date->format('l, jS F Y'));
+        $this->forwarder->send($message . $date->format('l, jS F Y'));
     }
 }

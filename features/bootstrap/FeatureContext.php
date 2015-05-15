@@ -4,6 +4,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use RgpJones\Lunchbot\Application;
 use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Lunchbot\Forwarder\Slack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,8 @@ class FeatureContext implements SnippetAcceptingContext
 
     private $storage;
 
+    private $forwarder;
+
     /**
      * @BeforeScenario
      */
@@ -35,12 +38,14 @@ class FeatureContext implements SnippetAcceptingContext
         $this->config = new SimpleXMLElement('<config/>');
         $this->config->webhook = 'http://example.com';
         $this->storage = tempnam(sys_get_temp_dir(), 'LC');
+        $this->forwarder = new Slack($this->config);
 
         $this->application = new Application(
             [
-                'config'       => $this->config,
+                'config' => $this->config,
                 'storage_file' => $this->storage,
-                'debug'        => true
+                'forwarder' => $this->forwarder,
+                'debug' => true
             ]
         );
     }

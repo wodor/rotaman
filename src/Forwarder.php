@@ -1,7 +1,9 @@
 <?php
 namespace RgpJones\Lunchbot;
 
-interface Dispatcher
+interface Forwarder
 {
+    public function setDebug($boolean);
+
     public function send($message);
 }
