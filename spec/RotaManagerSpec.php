@@ -26,6 +26,20 @@ class RotaManagerSpec extends ObjectBehavior
         $this->getShoppers()->shouldReturn($members);
     }
 
+    function it_removes_members(Storage $storage)
+    {
+        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave']]);
+        $storage->save(
+            ['members' => ['Alice', 'Chris', 'Dave'], 'cancelledDates' => [], 'rota' => [], 'paymentCalendar' => []]
+        )->willReturn(null);
+
+        $this->beConstructedWith($storage, new \DateTime());
+
+        $this->removeShopper('Bob')->shouldReturn(null);
+
+        $this->getShoppers()->shouldReturn(['Alice', 'Chris', 'Dave']);
+    }
+
     function it_returns_rota(Storage $storage)
     {
         $members = ['Alice', 'Bob', 'Chris', 'Dave'];
@@ -70,6 +84,42 @@ class RotaManagerSpec extends ObjectBehavior
         $storage->save(
             [
                 'members' => ['Bob', 'Chris', 'Dave', 'Elaine', 'Alice'],
+                'cancelledDates' => [],
+                'rota' => ($currentRota + $expectedRota),
+                'paymentCalendar' => []
+            ]
+        )->willReturn(null);
+
+        $this->beConstructedWith($storage);
+
+        $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
+    }
+
+    function it_excludes_members_removed_from_lunchclub(Storage $storage)
+    {
+        $currentRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Dave',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Alice',
+            '2010-01-07' => 'Bob',
+            '2010-01-08' => 'Chris',
+            '2010-01-11' => 'Dave',
+            '2010-01-12' => 'Elaine',
+            '2010-01-13' => 'Alice',
+        ];
+        $expectedRota = [
+            '2010-01-14' => 'Bob',
+            '2010-01-15' => 'Chris',
+            '2010-01-18' => 'Dave',
+            '2010-01-19' => 'Alice',
+            '2010-01-20' => 'Bob',
+        ];
+
+        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave'], 'rota' => $currentRota]);
+        $storage->save(
+            [
+                'members' => ['Bob', 'Chris', 'Dave', 'Alice'],
                 'cancelledDates' => [],
                 'rota' => ($currentRota + $expectedRota),
                 'paymentCalendar' => []

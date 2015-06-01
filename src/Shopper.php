@@ -19,12 +19,30 @@ class Shopper
         $this->currentShopper = $shopper;
     }
 
+    public function getCurrentShopper()
+    {
+        return $this->currentShopper;
+    }
+
     public function addShopper($name)
     {
         if (in_array($name, $this->shoppers)) {
             throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
         }
         $this->shoppers[] = $name;
+    }
+
+    public function removeShopper($name)
+    {
+        if (!in_array($name, $this->shoppers)) {
+            throw new \InvalidArgumentException("'{$name}' is not subscribed to Lunch Club");
+        }
+        if ($this->currentShopper == $name) {
+            $this->next();
+        }
+        unset($this->shoppers[array_search($name, $this->shoppers)]);
+
+        $this->shoppers = array_values($this->shoppers);
     }
 
     public function getShoppers()

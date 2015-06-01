@@ -50,6 +50,11 @@ class RotaManager
         $this->shopper->addShopper($name);
     }
 
+    public function removeShopper($name)
+    {
+        $this->shopper->removeShopper($name);
+    }
+
     public function getShoppers()
     {
         return $this->shopper->getShoppers();
@@ -107,6 +112,6 @@ class RotaManager
     protected function getMembersInRotaOrder(array $members, array $currentRota)
     {
         $reverseCurrentRota = array_reverse(array_unique(array_reverse($currentRota)));
-        return array_values(array_unique(array_merge($reverseCurrentRota, $members)));
+        return array_values(array_intersect(array_unique(array_merge($reverseCurrentRota, $members)), $members));
     }
 }
