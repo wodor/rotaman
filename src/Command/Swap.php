@@ -33,9 +33,9 @@ class Swap implements Command
             ? new DateTime($args[1])
             : new DateTime();
 
-        $this->rotaManager->swapShopperByDate($toDate, $fromDate);
+        $this->rotaManager->swapMemberByDate($toDate, $fromDate);
 
-        $this->slack->send("Shoppers swapped for dates {$fromDate->format('l, jS F Y')} and "
+        $this->slack->send("Members swapped for dates {$fromDate->format('l, jS F Y')} and "
             . "{$toDate->format('l, jS F Y')}");
     }
 }
