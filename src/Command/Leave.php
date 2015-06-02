@@ -26,7 +26,7 @@ class Leave implements Command
         if (!isset($username)) {
             throw new \RunTimeException('No username found to leave');
         }
-        $this->rotaManager->removeShopper($username);
+        $this->rotaManager->removeMember($username);
 
         $this->slack->send("{$username} has left Lunchclub");
     }

@@ -33,7 +33,7 @@ class Join implements Command
         if (!isset($username)) {
             throw new \RunTimeException('No username found to join');
         }
-        $this->rotaManager->addShopper($username);
+        $this->rotaManager->addMember($username);
 
         $this->slack->send("{$username} has joined Lunchclub");
     }

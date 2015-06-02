@@ -35,7 +35,7 @@ class Rota implements Command
     {
         $days = isset($args[0])
             ? $args[0]
-            : count($this->rotaManager->getShoppers());
+            : count($this->rotaManager->getMembers());
 
         if ($days > self::MAX_DAYS) {
             throw new \LengthException('Cannot exceed more than ' . self::MAX_DAYS . ' days into the future.');

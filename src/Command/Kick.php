@@ -28,7 +28,7 @@ class Kick implements Command
         }
         $user = $args[0];
 
-        $this->rotaManager->removeShopper($user);
+        $this->rotaManager->removeMember($user);
 
         $this->slack->send("{$username} kicked {$user} from Lunchclub");
     }
