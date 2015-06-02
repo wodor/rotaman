@@ -4,7 +4,7 @@ namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use RgpJones\Lunchbot\Member;
+use RgpJones\Lunchbot\MemberList;
 use RgpJones\Lunchbot\DateValidator;
 
 class RotaSpec extends ObjectBehavior
@@ -12,7 +12,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator()
         );
 
@@ -30,7 +30,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days_and_skip_weekend()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator()
         );
 
@@ -45,7 +45,7 @@ class RotaSpec extends ObjectBehavior
         );
     }
 
-    function it_returns_shopper_for_date()
+    function it_returns_member_for_date()
     {
         $currentRota = [
             '2010-01-01' => 'Alice',
@@ -54,12 +54,12 @@ class RotaSpec extends ObjectBehavior
         ];
 
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             $currentRota
         );
 
-        $this->getShopperForDate(new \DateTime('2010-01-05'))->shouldReturn('Chris');
+        $this->getMemberForDate(new \DateTime('2010-01-05'))->shouldReturn('Chris');
     }
 
     function it_generates_rota_with_existing_rota()
@@ -80,7 +80,7 @@ class RotaSpec extends ObjectBehavior
             '2010-01-14' => 'Bob',
         ];
 
-        $this->beConstructedWith(new Member($clubbers), new DateValidator(), $currentRota);
+        $this->beConstructedWith(new MemberList($clubbers), new DateValidator(), $currentRota);
 
         $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }
@@ -88,7 +88,7 @@ class RotaSpec extends ObjectBehavior
     function it_skips_current_user_and_realigns_rota()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             [
                 '2010-01-01' => 'Alice',
@@ -98,7 +98,7 @@ class RotaSpec extends ObjectBehavior
             ]
         );
 
-        $this->skipShopperForDate(new \DateTime('2010-01-04'));
+        $this->skipMemberForDate(new \DateTime('2010-01-04'));
         $this->getCurrentRota()->shouldReturn([
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Chris',
@@ -112,7 +112,7 @@ class RotaSpec extends ObjectBehavior
         $date = new \DateTime('2010-01-04');
 
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             [
                 '2010-01-01' => 'Alice',
@@ -136,7 +136,7 @@ class RotaSpec extends ObjectBehavior
     function it_gets_previous_rota_date()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             [
                 '2010-01-01' => 'Alice',
@@ -150,10 +150,10 @@ class RotaSpec extends ObjectBehavior
         $this->getPreviousRotaDate(new \DateTime('2012-01-01'))->shouldBeLike(new \DateTime('2010-01-06'));
     }
 
-    function it_returns_previous_shopper()
+    function it_returns_previous_member()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             [
                 '2010-01-01' => 'Alice',
@@ -163,13 +163,13 @@ class RotaSpec extends ObjectBehavior
             ]
         );
 
-        $this->getPreviousShopper(new \DateTime('2010-01-05'))->shouldReturn('Bob');
+        $this->getPreviousMember(new \DateTime('2010-01-05'))->shouldReturn('Bob');
     }
 
-    function it_swaps_shoppers()
+    function it_swaps_members()
     {
         $this->beConstructedWith(
-            new Member(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
             new DateValidator(),
             [
                 '2010-01-01' => 'Alice',
@@ -179,7 +179,7 @@ class RotaSpec extends ObjectBehavior
             ]
         );
 
-        $this->swapShopperByDate(new \DateTime('2010-01-06'), new \DateTime('2010-01-04'))
+        $this->swapMemberByDate(new \DateTime('2010-01-06'), new \DateTime('2010-01-04'))
             ->shouldReturn([
                 '2010-01-01' => 'Alice',
                 '2010-01-04' => 'Dave',

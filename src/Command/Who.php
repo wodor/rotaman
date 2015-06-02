@@ -27,7 +27,7 @@ class Who implements Command
 
     public function run(array $args, $username)
     {
-        $shopper = $this->rotaManager->getShopperForDate(new DateTime());
-        $this->slack->send(sprintf('Today\'s shopper is %s', $shopper));
+        $member = $this->rotaManager->getMemberForDate(new DateTime());
+        $this->slack->send(sprintf('Today it is %s\'s turn to shop', $member));
     }
 }

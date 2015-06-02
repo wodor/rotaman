@@ -7,7 +7,7 @@ use InvalidArgumentException;
 
 class Rota
 {
-    private $shopper;
+    private $memberList;
 
     private $interval;
 
@@ -15,9 +15,9 @@ class Rota
 
     private $dateValidator;
 
-    public function __construct(Member $shopper, DateValidator $dateValidator, array $currentRota = array())
+    public function __construct(MemberList $memberList, DateValidator $dateValidator, array $currentRota = array())
     {
-        $this->shopper = $shopper;
+        $this->memberList = $memberList;
         $this->interval = new DateInterval('P1D');
         $this->dateValidator = $dateValidator;
         $this->currentRota = $currentRota;
@@ -25,10 +25,10 @@ class Rota
 
     public function generate(DateTime $date, $days)
     {
-        $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
+        $rota[$this->getDateKey($date)] = $this->getNextMember($date);
         while (count($rota) < $days) {
             $date = $date->add($this->interval);
-            $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
+            $rota[$this->getDateKey($date)] = $this->getNextMember($date);
         }
         $this->currentRota = array_merge($this->currentRota, $rota);
 
@@ -40,7 +40,7 @@ class Rota
         return $this->currentRota;
     }
 
-    public function getShopperForDate(DateTime $date)
+    public function getMemberForDate(DateTime $date)
     {
         if (!isset($this->currentRota[$this->getDateKey($date)])) {
             $this->generate($date, 1);
@@ -49,17 +49,17 @@ class Rota
         return $this->currentRota[$this->getDateKey($date)];
     }
 
-    public function skipShopperForDate(DateTime $date)
+    public function skipMemberForDate(DateTime $date)
     {
         while (isset($this->currentRota[$this->getDateKey($date)])) {
-            $this->currentRota[$this->getDateKey($date)] = $this->getShopperAfterDate($date);
+            $this->currentRota[$this->getDateKey($date)] = $this->getMemberAfterDate($date);
             $date->add($this->interval);
         }
     }
 
-    protected function getShopperAfterDate(DateTime $date)
+    protected function getMemberAfterDate(DateTime $date)
     {
-        return $this->shopper->getShopperAfter($this->currentRota[$this->getDateKey($date)]);
+        return $this->memberList->getMemberAfter($this->currentRota[$this->getDateKey($date)]);
     }
 
     public function cancelOnDate(DateTime $cancelDate)
@@ -67,14 +67,14 @@ class Rota
         if ($this->dateValidator->isDateValid($cancelDate)) {
             $date = clone $cancelDate;
             if (isset($this->currentRota[$this->getDateKey($date)])) {
-                $shopper = $this->currentRota[$this->getDateKey($date)];
+                $member = $this->currentRota[$this->getDateKey($date)];
                 unset($this->currentRota[$this->getDateKey($date)]);
                 while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
-                    $nextShopper = $this->currentRota[$this->getDateKey($date)];
-                    $this->currentRota[$this->getDateKey($date)] = $shopper;
-                    $shopper = $nextShopper;
+                    $nextMember = $this->currentRota[$this->getDateKey($date)];
+                    $this->currentRota[$this->getDateKey($date)] = $member;
+                    $member = $nextMember;
                 }
-                $this->currentRota[$this->getDateKey($date)] = $shopper;
+                $this->currentRota[$this->getDateKey($date)] = $member;
             }
             $this->dateValidator->addCancelledDate($cancelDate);
 
@@ -85,19 +85,19 @@ class Rota
     }
 
 
-    public function getNextShopper()
+    public function getNextMember()
     {
-        return $this->shopper->next();
+        return $this->memberList->next();
     }
 
-    public function getPreviousShopper(DateTime $date)
+    public function getPreviousMember(DateTime $date)
     {
-        $previousShopper = null;
+        $previousMember = null;
         if (isset($this->currentRota[$this->getDateKey($date->sub($this->interval))])) {
-            $previousShopper = $this->currentRota[$this->getDateKey($date->sub($this->interval))];
+            $previousMember = $this->currentRota[$this->getDateKey($date->sub($this->interval))];
         }
 
-        return $previousShopper;
+        return $previousMember;
     }
 
     public function getPreviousRotaDate(DateTime $date)
@@ -130,7 +130,7 @@ class Rota
         return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 
-    public function swapShopperByDate(DateTime $toDate, DateTime $fromDate)
+    public function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
     {
         if (!isset($this->currentRota[$fromDate->format('Y-m-d')])) {
             throw new InvalidArgumentException('Specified From date ' . $fromDate->format('Y-m-d') . ' is invalid');
@@ -140,11 +140,11 @@ class Rota
             throw new InvalidArgumentException('Specified To date ' . $toDate->format('Y-m-d') . ' is invalid');
         }
 
-        $fromShopper = $this->currentRota[$fromDate->format('Y-m-d')];
-        $toShopper = $this->currentRota[$toDate->format('Y-m-d')];
+        $fromMember = $this->currentRota[$fromDate->format('Y-m-d')];
+        $toMember = $this->currentRota[$toDate->format('Y-m-d')];
 
-        $this->currentRota[$fromDate->format('Y-m-d')] = $toShopper;
-        $this->currentRota[$toDate->format('Y-m-d')] = $fromShopper;
+        $this->currentRota[$fromDate->format('Y-m-d')] = $toMember;
+        $this->currentRota[$toDate->format('Y-m-d')] = $fromMember;
 
         return $this->currentRota;
     }

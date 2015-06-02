@@ -34,7 +34,7 @@ class Paid implements Command
         $date = (isset($args[1]) ? new DateTime($args[1]) : new DateTime());
 
         if ($amount) {
-            if ($this->rotaManager->shopperPaidForDate($date, $username, $amount)) {
+            if ($this->rotaManager->memberPaidForDate($date, $username, $amount)) {
                 $response = sprintf('Your payment of £%.02f has been recorded', $amount);
             } else {
                 $response = "Failed to record as paid without an error";
@@ -42,7 +42,7 @@ class Paid implements Command
         } else {
             $response = sprintf(
                 'You have paid £%.02f this month',
-                $this->rotaManager->getAmountShopperPaidForDate(new DateTime(), $username)
+                $this->rotaManager->getAmountMemberPaidForDate(new DateTime(), $username)
             );
         }
 

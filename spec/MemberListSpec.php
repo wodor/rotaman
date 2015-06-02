@@ -4,9 +4,9 @@ namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
 
-class MemberSpec extends ObjectBehavior
+class MemberListSpec extends ObjectBehavior
 {
-    function it_should_return_next_shopper()
+    function it_should_return_next_member()
     {
         $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
         $this->next()->shouldReturn('Alice');
@@ -15,7 +15,7 @@ class MemberSpec extends ObjectBehavior
         $this->next()->shouldReturn('Dave');
     }
 
-    function it_should_return_prev_shopper()
+    function it_should_return_prev_member()
     {
         $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
         $this->prev()->shouldReturn('Dave');
@@ -24,23 +24,23 @@ class MemberSpec extends ObjectBehavior
         $this->prev()->shouldReturn('Alice');
     }
 
-    function it_adds_new_shopper_to_list()
+    function it_adds_new_member_to_list()
     {
         $this->beConstructedWith(['Alice', 'Bob']);
-        $this->addShopper('Chris');
-        $this->getShoppers()->shouldReturn(['Alice', 'Bob', 'Chris']);
+        $this->addMember('Chris');
+        $this->getMembers()->shouldReturn(['Alice', 'Bob', 'Chris']);
     }
 
-    function it_removes_shopper_from_list()
+    function it_removes_member_from_list()
     {
         $this->beConstructedWith(['Alice', 'Bob', 'Chris']);
-        $this->removeShopper('Bob');
-        $this->getShoppers()->shouldReturn(['Alice', 'Chris']);
+        $this->removeMember('Bob');
+        $this->getMembers()->shouldReturn(['Alice', 'Chris']);
     }
 
-    function it_returns_shopper_after_name()
+    function it_returns_member_after_name()
     {
         $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave', 'Elaine']);
-        $this->getShopperAfter('Chris')->shouldReturn('Dave');
+        $this->getMemberAfter('Chris')->shouldReturn('Dave');
     }
 }

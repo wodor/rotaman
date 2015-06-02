@@ -11,7 +11,7 @@ class RotaManager
 
     private $dateValidator;
 
-    private $shopper;
+    private $member;
 
     private $paymentCalendar;
 
@@ -26,10 +26,10 @@ class RotaManager
         $members = isset($data['members']) ? $data['members'] : [];
         $paymentCalendar = isset($data['paymentCalendar']) ? $data['paymentCalendar'] : [];
 
-        // Maintains shoppers in order as they are in current rota
-        $this->shopper = $this->getShopperEntity($members, $currentRota);
+        // Maintains members in order as they are in current rota
+        $this->member = $this->getMemberList($members, $currentRota);
         $this->dateValidator = new DateValidator($cancelledDates);
-        $this->rota = new Rota($this->shopper, $this->dateValidator, $currentRota);
+        $this->rota = new Rota($this->member, $this->dateValidator, $currentRota);
         $this->paymentCalendar =  new PaymentCalendar($paymentCalendar);
     }
 
@@ -37,7 +37,7 @@ class RotaManager
     {
         if (!empty($this->storage)) {
             $this->storage->save([
-                'members' => $this->shopper->getShoppers(),
+                'members' => $this->member->getMembers(),
                 'cancelledDates' => $this->dateValidator->getCancelledDates(),
                 'rota' => $this->rota->getCurrentRota(),
                 'paymentCalendar' => $this->paymentCalendar->getPaymentCalendar(),
@@ -45,19 +45,19 @@ class RotaManager
         }
     }
 
-    public function addShopper($name)
+    public function addMember($name)
     {
-        $this->shopper->addShopper($name);
+        $this->member->addMember($name);
     }
 
-    public function removeShopper($name)
+    public function removeMember($name)
     {
-        $this->shopper->removeShopper($name);
+        $this->member->removeMember($name);
     }
 
-    public function getShoppers()
+    public function getMembers()
     {
-        return $this->shopper->getShoppers();
+        return $this->member->getMembers();
     }
 
     public function generateRota(DateTime $date, $days)
@@ -65,14 +65,14 @@ class RotaManager
         return $this->rota->generate($date, $days);
     }
 
-    public function getShopperForDate(DateTime $date)
+    public function getMemberForDate(DateTime $date)
     {
-        return $this->rota->getShopperForDate($date);
+        return $this->rota->getMemberForDate($date);
     }
 
-    public function skipShopperForDate(DateTime $date)
+    public function skipMemberForDate(DateTime $date)
     {
-        return $this->rota->skipShopperForDate($date);
+        return $this->rota->skipMemberForDate($date);
     }
 
     public function cancelOnDate(DateTime $date)
@@ -80,21 +80,21 @@ class RotaManager
         return $this->rota->cancelOnDate($date);
     }
 
-    public function swapShopperByDate(DateTime $toDate, DateTime $fromDate)
+    public function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
     {
-        $rota = $this->rota->swapShopperByDate($toDate, $fromDate);
-        $this->shopper = $this->getShopperEntity($this->shopper->getShoppers(), $rota);
+        $rota = $this->rota->swapMemberByDate($toDate, $fromDate);
+        $this->member = $this->getMemberList($this->member->getMembers(), $rota);
         return $rota;
     }
 
-    public function getAmountShopperPaidForDate($date, $shopper)
+    public function getAmountMemberPaidForDate($date, $member)
     {
-        return $this->paymentCalendar->getAmountShopperPaidForDate($date, $shopper);
+        return $this->paymentCalendar->getAmountMemberPaidForDate($date, $member);
     }
 
-    public function shopperPaidForDate(DateTime $date, $shopper, $amount)
+    public function memberPaidForDate(DateTime $date, $member, $amount)
     {
-        return $this->paymentCalendar->shopperPaidForDate($date, $shopper, $amount);
+        return $this->paymentCalendar->memberPaidForDate($date, $member, $amount);
     }
 
     public function getWhoPaidForDate(DateTime $date)
@@ -104,9 +104,9 @@ class RotaManager
 
 
 
-    protected function getShopperEntity($shoppers, $rota)
+    protected function getMemberList($members, $rota)
     {
-        return new Member($this->getMembersInRotaOrder($shoppers, $rota));
+        return new MemberList($this->getMembersInRotaOrder($members, $rota));
     }
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)

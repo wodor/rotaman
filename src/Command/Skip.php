@@ -25,12 +25,12 @@ class Skip implements Command
 
     public function getUsage()
     {
-        return '`skip`: Skip current shopper, and pull remaining rota forwards';
+        return '`skip`: Skip current member, and pull remaining rota forwards';
     }
 
     public function run(array $args, $username)
     {
-        $this->rotaManager->skipShopperForDate(new DateTime());
+        $this->rotaManager->skipMemberForDate(new DateTime());
         $this->whoCommand->run([], $username);
     }
 }

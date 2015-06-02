@@ -32,29 +32,29 @@ class Whopaid implements Command
             ? new DateTime($args[0])
             : new DateTime();
 
-        $paidShoppers = $this->rotaManager->getWhoPaidForDate($date);
+        $paidMembers = $this->rotaManager->getWhoPaidForDate($date);
         $this->slack->send(
             "Lunchclub payments for " . $date->format('F') . ":\n"
-                . $this->formatWhoPaid($paidShoppers)
+                . $this->formatWhoPaid($paidMembers)
         );
     }
 
-    protected function formatWhoPaid($paidShoppers)
+    protected function formatWhoPaid($paidMembers)
     {
-        $shoppers = $this->rotaManager->getShoppers();
-        $unpaidShoppers = array_diff($shoppers, $paidShoppers);
+        $members = $this->rotaManager->getMembers();
+        $unpaidMembers = array_diff($members, $paidMembers);
 
         $message = '';
-        if (count($paidShoppers) == 0) {
+        if (count($paidMembers) == 0) {
             $message .= "No members have paid so far.\n";
         } else {
-            $message .= sprintf("Members that have paid: %s\n", implode(', ', $paidShoppers));
+            $message .= sprintf("Members that have paid: %s\n", implode(', ', $paidMembers));
         }
 
-        if (count($unpaidShoppers) == 0) {
+        if (count($unpaidMembers) == 0) {
             $message .= "All members have paid.\n";
         } else {
-            $message .= sprintf("Members that haven't paid: %s\n", implode(', ', $unpaidShoppers));
+            $message .= sprintf("Members that haven't paid: %s\n", implode(', ', $unpaidMembers));
         }
 
         return $message;

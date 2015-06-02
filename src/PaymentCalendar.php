@@ -21,20 +21,20 @@ class PaymentCalendar
         return $this->paymentCalendar;
     }
 
-    public function shopperPaidForDate(DateTime $date, $shopper, $amount)
+    public function memberPaidForDate(DateTime $date, $member, $amount)
     {
-        if (isset($this->paymentCalendar[$this->getDateKey($date)][$shopper])) {
-            $amount += $this->paymentCalendar[$this->getDateKey($date)][$shopper];
+        if (isset($this->paymentCalendar[$this->getDateKey($date)][$member])) {
+            $amount += $this->paymentCalendar[$this->getDateKey($date)][$member];
         }
-        $this->paymentCalendar[$this->getDateKey($date)][$shopper] = $amount;
+        $this->paymentCalendar[$this->getDateKey($date)][$member] = $amount;
         return true;
     }
 
-    public function getAmountShopperPaidForDate(DateTime $date, $shopper)
+    public function getAmountMemberPaidForDate(DateTime $date, $member)
     {
         $amount = 0;
-        if (isset($this->paymentCalendar[$this->getDateKey($date)][$shopper])) {
-            $amount = $this->paymentCalendar[$this->getDateKey($date)][$shopper];
+        if (isset($this->paymentCalendar[$this->getDateKey($date)][$member])) {
+            $amount = $this->paymentCalendar[$this->getDateKey($date)][$member];
         }
         return $amount;
     }

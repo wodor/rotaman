@@ -19,12 +19,12 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage, new \DateTime());
 
-        $this->addShopper('Alice');
-        $this->addShopper('Bob');
-        $this->addShopper('Chris');
-        $this->addShopper('Dave');
+        $this->addMember('Alice');
+        $this->addMember('Bob');
+        $this->addMember('Chris');
+        $this->addMember('Dave');
 
-        $this->getShoppers()->shouldReturn($members);
+        $this->getMembers()->shouldReturn($members);
     }
 
     function it_removes_members(Storage $storage)
@@ -36,9 +36,9 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage, new \DateTime());
 
-        $this->removeShopper('Bob')->shouldReturn(null);
+        $this->removeMember('Bob')->shouldReturn(null);
 
-        $this->getShoppers()->shouldReturn(['Alice', 'Chris', 'Dave']);
+        $this->getMembers()->shouldReturn(['Alice', 'Chris', 'Dave']);
     }
 
     function it_returns_rota(Storage $storage)
@@ -128,12 +128,12 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->addShopper('Alice');
+        $this->addMember('Alice');
 
         $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
     }
 
-    function it_returns_shopper_for_date(Storage $storage)
+    function it_returns_member_for_date(Storage $storage)
     {
         $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $expectedRota = [
@@ -156,10 +156,10 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->getShopperForDate(new \DateTime('2010-01-04'))->shouldReturn('Bob');
+        $this->getMemberForDate(new \DateTime('2010-01-04'))->shouldReturn('Bob');
     }
 
-    function it_skips_shopper_for_date(Storage $storage)
+    function it_skips_member_for_date(Storage $storage)
     {
         $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $currentRota = [
@@ -182,7 +182,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->skipShopperForDate(new \DateTime('2010-01-05'));
+        $this->skipMemberForDate(new \DateTime('2010-01-05'));
     }
 
     function it_cancels_lunchclub_on_date(Storage $storage)
@@ -216,7 +216,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->cancelOnDate(new \DateTime('2010-01-05'));
     }
 
-    function it_saves_shoppers_correctly_missing_from_current_rota(Storage $storage)
+    function it_saves_members_correctly_missing_from_current_rota(Storage $storage)
     {
         $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $currentRota = [
@@ -248,7 +248,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldReturn($nextRota);
     }
 
-    function it_swaps_shoppers_on_dates_specified(Storage $storage)
+    function it_swaps_members_on_dates_specified(Storage $storage)
     {
         $updatedRota = [
             '2010-01-01' => 'Chris',
@@ -276,13 +276,13 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->swapShopperByDate(
+        $this->swapMemberByDate(
             new \DateTime('2010-01-05'),
             new \DateTime('2010-01-01')
         )->shouldReturn($updatedRota);
     }
 
-    function it_marks_shopper_as_paid(Storage $storage)
+    function it_marks_member_as_paid(Storage $storage)
     {
         $storage->load()->willReturn([
             'paymentCalendar' => [
@@ -306,14 +306,14 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->shopperPaidForDate(
+        $this->memberPaidForDate(
             new \DateTime('2010-03-22'),
             'Bob',
             (float) 20.00
         )->shouldReturn(true);
     }
 
-    function it_returns_amount_shopper_as_paid(Storage $storage)
+    function it_returns_amount_member_as_paid(Storage $storage)
     {
         $storage->load()->willReturn([
             'paymentCalendar' => [
@@ -336,7 +336,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->getAmountShopperPaidForDate(
+        $this->getAmountMemberPaidForDate(
             new \DateTime('2010-03-16'),
             'Alice'
         )->shouldReturn(20.00);
