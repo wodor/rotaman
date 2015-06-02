@@ -3,14 +3,17 @@ namespace RgpJones\Lunchbot\Command;
 
 use RgpJones\Lunchbot\Command;
 use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Lunchbot\Slack;
 
 class Kick implements Command
 {
     protected $rotaManager;
+    protected $slack;
 
-    public function __construct(RotaManager $rotaManager)
+    public function __construct(RotaManager $rotaManager, Slack $slack)
     {
         $this->rotaManager = $rotaManager;
+        $this->slack = $slack;
     }
 
     public function getUsage()
