@@ -150,22 +150,6 @@ class RotaSpec extends ObjectBehavior
         $this->getPreviousRotaDate(new \DateTime('2012-01-01'))->shouldBeLike(new \DateTime('2010-01-06'));
     }
 
-    function it_returns_previous_member()
-    {
-        $this->beConstructedWith(
-            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
-            new DateValidator(),
-            [
-                '2010-01-01' => 'Alice',
-                '2010-01-04' => 'Bob',
-                '2010-01-05' => 'Chris',
-                '2010-01-06' => 'Dave',
-            ]
-        );
-
-        $this->getPreviousMember(new \DateTime('2010-01-05'))->shouldReturn('Bob');
-    }
-
     function it_swaps_members()
     {
         $this->beConstructedWith(

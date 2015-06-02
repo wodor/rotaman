@@ -85,16 +85,6 @@ class Rota
         return $this->memberList->next();
     }
 
-    public function getPreviousMember(DateTime $date)
-    {
-        $previousMember = null;
-        if (isset($this->currentRota[$this->getDateKey($date->sub($this->interval))])) {
-            $previousMember = $this->currentRota[$this->getDateKey($date->sub($this->interval))];
-        }
-
-        return $previousMember;
-    }
-
     public function getPreviousRotaDate(DateTime $date)
     {
         $rotaDates = $this->getRotaDatesWithDate($date);
