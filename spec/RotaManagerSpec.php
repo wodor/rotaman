@@ -43,16 +43,15 @@ class RotaManagerSpec extends ObjectBehavior
 
     function it_returns_rota(Storage $storage)
     {
-        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $expectedRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
             '2010-01-05' => 'Chris'
         ];
 
-        $storage->load()->willReturn(['members' => $members]);
+        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave']]);
         $storage->save(
-            ['members' => $members, 'cancelledDates' => [], 'rota' => $expectedRota, 'paymentCalendar' => []]
+            ['members' => ['Dave', 'Alice', 'Bob', 'Chris'], 'cancelledDates' => [], 'rota' => $expectedRota, 'paymentCalendar' => []]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -110,17 +109,17 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-13' => 'Dave',
         ];
         $expectedRota = [
-            '2010-01-14' => 'Alice',
-            '2010-01-15' => 'Bob',
-            '2010-01-18' => 'Chris',
-            '2010-01-19' => 'Dave',
-            '2010-01-20' => 'Alice',
+            '2010-01-14' => 'Bob',
+            '2010-01-15' => 'Chris',
+            '2010-01-18' => 'Dave',
+            '2010-01-19' => 'Alice',
+            '2010-01-20' => 'Bob',
         ];
 
         $storage->load()->willReturn(['members' => ['Bob', 'Chris', 'Dave'], 'rota' => $currentRota]);
         $storage->save(
             [
-                'members' => ['Bob', 'Chris', 'Dave', 'Alice'],
+                'members' => ['Chris', 'Dave', 'Alice', 'Bob'],
                 'cancelledDates' => [],
                 'rota' => ($currentRota + $expectedRota),
                 'paymentCalendar' => []
@@ -228,10 +227,10 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-07' => 'Alice'
         ];
         $nextRota = [
-            '2010-01-12' => 'Chris',
-            '2010-01-13' => 'Bob',
-            '2010-01-14' => 'Dave',
-            '2010-01-15' => 'Alice',
+            '2010-01-12' => 'Bob',
+            '2010-01-13' => 'Dave',
+            '2010-01-14' => 'Alice',
+            '2010-01-15' => 'Chris',
         ];
 
         $storage->load()->willReturn(['members' => $members, 'cancelledDates' => [], 'rota' => $currentRota]);
