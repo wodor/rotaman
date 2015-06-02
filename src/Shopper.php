@@ -3,25 +3,11 @@ namespace RgpJones\Lunchbot;
 
 class Shopper
 {
-    private $currentShopper;
     private $shoppers = [];
 
     public function __construct(array $shoppers)
     {
         $this->shoppers = $shoppers;
-    }
-
-    public function setCurrentShopper($shopper)
-    {
-        if (!in_array($shopper, $this->shoppers)) {
-            throw new \InvalidArgumentException('Current Shopper must be in shoppers list');
-        }
-        $this->currentShopper = $shopper;
-    }
-
-    public function getCurrentShopper()
-    {
-        return $this->currentShopper;
     }
 
     public function addShopper($name)
@@ -38,9 +24,7 @@ class Shopper
         if (!in_array($name, $this->shoppers)) {
             throw new \InvalidArgumentException("'{$name}' is not subscribed to Lunch Club");
         }
-        if ($this->currentShopper == $name) {
-            $this->next();
-        }
+
         unset($this->shoppers[array_search($name, $this->shoppers)]);
 
         $this->shoppers = array_values($this->shoppers);
@@ -53,12 +37,20 @@ class Shopper
 
     public function next()
     {
-        $this->currentShopper = is_null($this->currentShopper)
-            ? $this->shoppers[0]
-            : $this->getShopperAfter($this->currentShopper);
+        $shopper = array_shift($this->shoppers);
+        $this->shoppers[] = $shopper;
 
-        return $this->currentShopper;
+        return $this->shoppers[0];
     }
+
+    public function prev()
+    {
+        $shopper = array_pop($this->shoppers);
+        array_unshift($this->shoppers, $shopper);
+
+        return $this->shoppers[0];
+    }
+
 
     public function getShopperAfter($name)
     {
@@ -72,16 +64,5 @@ class Shopper
         }
 
         return $this->shoppers[$index];
-    }
-
-    public function prev()
-    {
-        $prevOffset = array_search($this->currentShopper, $this->shoppers) - 1;
-        if ($prevOffset < 0) {
-            $prevOffset = count($this->shoppers) - 1;
-        }
-        $this->currentShopper = $this->shoppers[$prevOffset];
-
-        return $this->currentShopper;
     }
 }
