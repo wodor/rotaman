@@ -113,23 +113,6 @@ class Rota
         return $rotaDate;
     }
 
-    protected function getRotaDatesWithDate(DateTime $date)
-    {
-        $date = $date->format('Y-m-d');
-        $rotaDates = array_keys($this->currentRota);
-        if (!in_array($date, $rotaDates)) {
-            $rotaDates[] = $date;
-        }
-        sort($rotaDates);
-
-        return $rotaDates;
-    }
-
-    protected function getDateKey(DateTime $date)
-    {
-        return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
-    }
-
     public function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
     {
         if (!isset($this->currentRota[$fromDate->format('Y-m-d')])) {
@@ -147,5 +130,22 @@ class Rota
         $this->currentRota[$toDate->format('Y-m-d')] = $fromMember;
 
         return $this->currentRota;
+    }
+
+    protected function getRotaDatesWithDate(DateTime $date)
+    {
+        $date = $date->format('Y-m-d');
+        $rotaDates = array_keys($this->currentRota);
+        if (!in_array($date, $rotaDates)) {
+            $rotaDates[] = $date;
+        }
+        sort($rotaDates);
+
+        return $rotaDates;
+    }
+
+    protected function getDateKey(DateTime $date)
+    {
+        return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
     }
 }
