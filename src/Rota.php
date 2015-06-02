@@ -58,9 +58,14 @@ class Rota
     public function skipShopperForDate(DateTime $date)
     {
         while (isset($this->currentRota[$this->getDateKey($date)])) {
-            $currentDate = clone $date;
-            $this->currentRota[$this->getDateKey($currentDate)] = $this->getNextShopper($date->add($this->interval));
+            $this->currentRota[$this->getDateKey($date)] = $this->getShopperAfterDate($date);
+            $date->add($this->interval);
         }
+    }
+
+    protected function getShopperAfterDate(DateTime $date)
+    {
+        return $this->shopper->getShopperAfter($this->currentRota[$this->getDateKey($date)]);
     }
 
     public function cancelOnDate(DateTime $cancelDate)
