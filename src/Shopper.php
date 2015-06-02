@@ -53,16 +53,25 @@ class Shopper
 
     public function next()
     {
-        $nextOffset = 0;
-        if (!is_null($this->currentShopper)) {
-            $nextOffset = array_search($this->currentShopper, $this->shoppers) + 1;
-            if ($nextOffset >= count($this->shoppers)) {
-                $nextOffset = 0;
-            }
-        }
-        $this->currentShopper = $this->shoppers[$nextOffset];
+        $this->currentShopper = is_null($this->currentShopper)
+            ? $this->shoppers[0]
+            : $this->getShopperAfter($this->currentShopper);
 
         return $this->currentShopper;
+    }
+
+    public function getShopperAfter($name)
+    {
+        if (!in_array($name, $this->shoppers)) {
+            throw new \RuntimeException("Shopper {$name} not found");
+        }
+
+        $index = array_search($name, $this->shoppers) + 1;
+        if ($index >= count($this->shoppers)) {
+            $index = 0;
+        }
+
+        return $this->shoppers[$index];
     }
 
     public function prev()
