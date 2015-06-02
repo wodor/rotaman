@@ -35,6 +35,6 @@ class Join implements Command
         }
         $this->rotaManager->addShopper($username);
 
-        $this->slack->send("{$args['user_name']} has been added to Lunchclub");
+        $this->slack->send("{$username} has joined Lunchclub");
     }
 }
