@@ -37,16 +37,14 @@ class MemberList
 
     public function next()
     {
-        $member = array_shift($this->members);
-        $this->members[] = $member;
+        $this->members[] = array_shift($this->members);
 
-        return $member;
+        return $this->members[count($this->members) - 1];
     }
 
     public function prev()
     {
-        $member = array_pop($this->members);
-        array_unshift($this->members, $member);
+        array_unshift($this->members, array_pop($this->members));
 
         return $this->members[0];
     }
