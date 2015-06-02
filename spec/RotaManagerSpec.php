@@ -23,6 +23,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->addShopper('Bob');
         $this->addShopper('Chris');
         $this->addShopper('Dave');
+
         $this->getShoppers()->shouldReturn($members);
     }
 
@@ -98,25 +99,25 @@ class RotaManagerSpec extends ObjectBehavior
     function it_excludes_members_removed_from_lunchclub(Storage $storage)
     {
         $currentRota = [
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Dave',
-            '2010-01-05' => 'Chris',
-            '2010-01-06' => 'Alice',
-            '2010-01-07' => 'Bob',
-            '2010-01-08' => 'Chris',
-            '2010-01-11' => 'Dave',
-            '2010-01-12' => 'Elaine',
-            '2010-01-13' => 'Alice',
+            '2010-01-01' => 'Bob',
+            '2010-01-04' => 'Chris',
+            '2010-01-05' => 'Dave',
+            '2010-01-06' => 'Chris',
+            '2010-01-07' => 'Dave',
+            '2010-01-08' => 'Bob',
+            '2010-01-11' => 'Elaine',
+            '2010-01-12' => 'Chris',
+            '2010-01-13' => 'Dave',
         ];
         $expectedRota = [
-            '2010-01-14' => 'Bob',
-            '2010-01-15' => 'Chris',
-            '2010-01-18' => 'Dave',
-            '2010-01-19' => 'Alice',
-            '2010-01-20' => 'Bob',
+            '2010-01-14' => 'Alice',
+            '2010-01-15' => 'Bob',
+            '2010-01-18' => 'Chris',
+            '2010-01-19' => 'Dave',
+            '2010-01-20' => 'Alice',
         ];
 
-        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave'], 'rota' => $currentRota]);
+        $storage->load()->willReturn(['members' => ['Bob', 'Chris', 'Dave'], 'rota' => $currentRota]);
         $storage->save(
             [
                 'members' => ['Bob', 'Chris', 'Dave', 'Alice'],
@@ -127,6 +128,8 @@ class RotaManagerSpec extends ObjectBehavior
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
+
+        $this->addShopper('Alice');
 
         $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
     }

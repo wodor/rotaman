@@ -29,6 +29,7 @@ class Shopper
         if (in_array($name, $this->shoppers)) {
             throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
         }
+
         $this->shoppers[] = $name;
     }
 

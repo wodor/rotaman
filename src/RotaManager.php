@@ -111,7 +111,20 @@ class RotaManager
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)
     {
-        $reverseCurrentRota = array_reverse(array_unique(array_reverse($currentRota)));
-        return array_values(array_intersect(array_unique(array_merge($reverseCurrentRota, $members)), $members));
+        $reverseCurrentRota = $this->getMembersFromRotaInRecentOrder($currentRota);
+        $allMembers = array_values(array_unique(array_merge($reverseCurrentRota, $members)));
+        return array_values(array_intersect($allMembers, $members));
+    }
+
+    /**
+     * Gets the members in the rota in the order that they were most recently
+     *
+     * @param $rota
+     *
+     * @return array
+     */
+    protected function getMembersFromRotaInRecentOrder($rota)
+    {
+        return array_reverse(array_unique(array_reverse($rota)));
     }
 }
