@@ -28,18 +28,12 @@ class Rota implements Command
 
     public function getUsage()
     {
-        return '`rota` [days]: Show the upcoming rota for the number of days specified';
+        return '`rota`: Show the upcoming rota';
     }
 
     public function run(array $args, $username)
     {
-        $days = isset($args[0])
-            ? $args[0]
-            : count($this->rotaManager->getMembers());
-
-        if ($days > self::MAX_DAYS) {
-            throw new \LengthException('Cannot exceed more than ' . self::MAX_DAYS . ' days into the future.');
-        }
+        $days = count($this->rotaManager->getMembers());
 
         $rota = $this->rotaManager->generateRota(new DateTime(), $days);
         $response = '';
