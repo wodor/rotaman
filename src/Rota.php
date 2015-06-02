@@ -25,12 +25,6 @@ class Rota
 
     public function generate(DateTime $date, $days)
     {
-        // Sets current shopper to the shopper for the previous time lunchclub ran
-        $previousDate = $this->getPreviousRotaDate($date);
-        if (!is_null($previousDate)) {
-            $this->shopper->setCurrentShopper($this->currentRota[$previousDate->format('Y-m-d')]);
-        }
-
         $rota[$this->getDateKey($date)] = $this->getNextShopper($date);
         while (count($rota) < $days) {
             $date = $date->add($this->interval);
@@ -90,16 +84,10 @@ class Rota
         return false;
     }
 
-    public function getNextShopper(\DateTime $date)
-    {
-        if (isset($this->currentRota[$this->getDateKey($date)])) {
-            $shopper = $this->currentRota[$this->getDateKey($date)];
-            $this->shopper->setCurrentShopper($this->currentRota[$this->getDateKey($date)]);
 
-            return $shopper;
-        } else {
-            return $this->shopper->next();
-        }
+    public function getNextShopper()
+    {
+        return $this->shopper->next();
     }
 
     public function getPreviousShopper(DateTime $date)
