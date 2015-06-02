@@ -57,11 +57,6 @@ class Rota
         }
     }
 
-    protected function getMemberAfterDate(DateTime $date)
-    {
-        return $this->memberList->getMemberAfter($this->currentRota[$this->getDateKey($date)]);
-    }
-
     public function cancelOnDate(DateTime $cancelDate)
     {
         if ($this->dateValidator->isDateValid($cancelDate)) {
@@ -147,5 +142,10 @@ class Rota
     protected function getDateKey(DateTime $date)
     {
         return $this->dateValidator->getNextValidDate($date)->format('Y-m-d');
+    }
+
+    protected function getMemberAfterDate(DateTime $date)
+    {
+        return $this->memberList->getMemberAfter($this->currentRota[$this->getDateKey($date)]);
     }
 }
