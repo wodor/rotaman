@@ -59,26 +59,18 @@ class Rota
 
     public function cancelOnDate(DateTime $cancelDate)
     {
+        $result = false;
         if ($this->dateValidator->isDateValid($cancelDate)) {
             $date = clone $cancelDate;
             if (isset($this->currentRota[$this->getDateKey($date)])) {
-                $member = $this->currentRota[$this->getDateKey($date)];
-                unset($this->currentRota[$this->getDateKey($date)]);
-                while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
-                    $nextMember = $this->currentRota[$this->getDateKey($date)];
-                    $this->currentRota[$this->getDateKey($date)] = $member;
-                    $member = $nextMember;
-                }
-                $this->currentRota[$this->getDateKey($date)] = $member;
+                $this->removeDateAndMoveMembers($date);
             }
+
             $this->dateValidator->addCancelledDate($cancelDate);
-
-            return true;
+            $result = true;
         }
-
-        return false;
+        return $result;
     }
-
 
     public function getNextMember()
     {
@@ -115,6 +107,18 @@ class Rota
         $this->currentRota[$toDate->format('Y-m-d')] = $fromMember;
 
         return $this->currentRota;
+    }
+
+    protected function removeDateAndMoveMembers($date)
+    {
+        $member = $this->currentRota[$this->getDateKey($date)];
+        unset($this->currentRota[$this->getDateKey($date)]);
+        while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
+            $nextMember = $this->currentRota[$this->getDateKey($date)];
+            $this->currentRota[$this->getDateKey($date)] = $member;
+            $member = $nextMember;
+        }
+        $this->currentRota[$this->getDateKey($date)] = $member;
     }
 
     protected function getRotaDatesWithDate(DateTime $date)
