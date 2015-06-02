@@ -40,7 +40,7 @@ class Shopper
         $shopper = array_shift($this->shoppers);
         $this->shoppers[] = $shopper;
 
-        return $this->shoppers[0];
+        return $shopper;
     }
 
     public function prev()

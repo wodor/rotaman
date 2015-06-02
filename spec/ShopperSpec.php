@@ -9,10 +9,10 @@ class ShopperSpec extends ObjectBehavior
     function it_should_return_next_shopper()
     {
         $this->beConstructedWith(['Alice', 'Bob', 'Chris', 'Dave']);
+        $this->next()->shouldReturn('Alice');
         $this->next()->shouldReturn('Bob');
         $this->next()->shouldReturn('Chris');
         $this->next()->shouldReturn('Dave');
-        $this->next()->shouldReturn('Alice');
     }
 
     function it_should_return_prev_shopper()
