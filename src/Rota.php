@@ -25,10 +25,10 @@ class Rota
 
     public function generate(DateTime $date, $days)
     {
-        $rota[$this->getDateKey($date)] = $this->getNextMember($date);
+        $rota = [];
         while (count($rota) < $days) {
+            $rota[$this->getDateKey($date)] = $this->getNextMember();
             $date = $date->add($this->interval);
-            $rota[$this->getDateKey($date)] = $this->getNextMember($date);
         }
         $this->currentRota = array_merge($this->currentRota, $rota);
 
