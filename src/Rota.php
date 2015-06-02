@@ -15,7 +15,7 @@ class Rota
 
     private $dateValidator;
 
-    public function __construct(Shopper $shopper, DateValidator $dateValidator, array $currentRota = array())
+    public function __construct(Member $shopper, DateValidator $dateValidator, array $currentRota = array())
     {
         $this->shopper = $shopper;
         $this->interval = new DateInterval('P1D');

@@ -4,7 +4,7 @@ namespace spec\RgpJones\Lunchbot;
 
 use PhpSpec\ObjectBehavior;
 
-class ShopperSpec extends ObjectBehavior
+class MemberSpec extends ObjectBehavior
 {
     function it_should_return_next_shopper()
     {

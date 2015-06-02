@@ -1,7 +1,7 @@
 <?php
 namespace RgpJones\Lunchbot;
 
-class Shopper
+class Member
 {
     private $shoppers = [];
 

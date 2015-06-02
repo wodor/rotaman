@@ -106,7 +106,7 @@ class RotaManager
 
     protected function getShopperEntity($shoppers, $rota)
     {
-        return new Shopper($this->getMembersInRotaOrder($shoppers, $rota));
+        return new Member($this->getMembersInRotaOrder($shoppers, $rota));
     }
 
     protected function getMembersInRotaOrder(array $members, array $currentRota)
