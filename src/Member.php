@@ -13,7 +13,7 @@ class Member
     public function addShopper($name)
     {
         if (in_array($name, $this->shoppers)) {
-            throw new \InvalidArgumentException("'{$name}' is already subscribed to Lunch Club");
+            throw new \InvalidArgumentException("'{$name}' is already a member of Lunch Club");
         }
 
         $this->shoppers[] = $name;
@@ -22,7 +22,7 @@ class Member
     public function removeShopper($name)
     {
         if (!in_array($name, $this->shoppers)) {
-            throw new \InvalidArgumentException("'{$name}' is not subscribed to Lunch Club");
+            throw new \InvalidArgumentException("'{$name}' is not a member of Lunch Club");
         }
 
         unset($this->shoppers[array_search($name, $this->shoppers)]);
