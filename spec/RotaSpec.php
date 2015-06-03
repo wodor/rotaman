@@ -9,58 +9,22 @@ use RgpJones\Lunchbot\DateValidator;
 
 class RotaSpec extends ObjectBehavior
 {
-    function it_generates_rota_for_next_5_days()
-    {
-        $this->beConstructedWith(
-            new MemberList(['Dave', 'Alice', 'Bob', 'Chris']),
-            new DateValidator()
-        );
-
-        $this->generate(new \DateTime('2010-01-11'), 5)->shouldReturn(
-            [
-                '2010-01-11' => 'Alice',
-                '2010-01-12' => 'Bob',
-                '2010-01-13' => 'Chris',
-                '2010-01-14' => 'Dave',
-                '2010-01-15' => 'Alice'
-            ]
-        );
-    }
-
-    function it_generates_rota_for_next_5_days_and_skip_weekend()
-    {
-        $this->beConstructedWith(
-            new MemberList(['Dave', 'Alice', 'Bob', 'Chris']),
-            new DateValidator()
-        );
-
-        $this->generate(new \DateTime('2010-01-01'), 5)->shouldReturn(
-            [
-                '2010-01-01' => 'Alice',
-                '2010-01-04' => 'Bob',
-                '2010-01-05' => 'Chris',
-                '2010-01-06' => 'Dave',
-                '2010-01-07' => 'Alice'
-            ]
-        );
-    }
-
-    function it_generates_rota_with_existing_rota()
+    function it_generates_rota()
     {
         $clubbers = ['Dave', 'Alice', 'Bob', 'Chris'];
         $currentRota = [
             '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Chris',
+            '2010-01-04' => 'Chris',
+            '2010-01-05' => 'Bob',
         ];
         $expectedRota = $currentRota + [
             '2010-01-06' => 'Dave',
             '2010-01-07' => 'Alice',
-            '2010-01-08' => 'Bob',
-            '2010-01-11' => 'Chris',
+            '2010-01-08' => 'Chris',
+            '2010-01-11' => 'Bob',
             '2010-01-12' => 'Dave',
             '2010-01-13' => 'Alice',
-            '2010-01-14' => 'Bob',
+            '2010-01-14' => 'Chris',
         ];
 
         $this->beConstructedWith(new MemberList($clubbers), new DateValidator(), $currentRota);
@@ -99,7 +63,7 @@ class RotaSpec extends ObjectBehavior
         );
 
         $this->skipMemberForDate(new \DateTime('2010-01-04'));
-        $this->getCurrentRota()->shouldReturn([
+        $this->getRota()->shouldReturn([
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Chris',
             '2010-01-05' => 'Dave',
@@ -123,7 +87,7 @@ class RotaSpec extends ObjectBehavior
         );
 
         $this->cancelOnDate($date);
-        $this->getCurrentRota()->shouldReturn(
+        $this->getRota()->shouldReturn(
             [
                 '2010-01-01' => 'Alice',
                 '2010-01-05' => 'Bob',
@@ -131,23 +95,6 @@ class RotaSpec extends ObjectBehavior
                 '2010-01-07' => 'Dave',
             ]
         );
-    }
-
-    function it_gets_previous_rota_date()
-    {
-        $this->beConstructedWith(
-            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
-            new DateValidator(),
-            [
-                '2010-01-01' => 'Alice',
-                '2010-01-04' => 'Bob',
-                '2010-01-05' => 'Chris',
-                '2010-01-06' => 'Dave',
-            ]
-        );
-
-        $this->getPreviousRotaDate(new \DateTime('2010-01-04'))->shouldBeLike(new \DateTime('2010-01-01'));
-        $this->getPreviousRotaDate(new \DateTime('2012-01-01'))->shouldBeLike(new \DateTime('2010-01-06'));
     }
 
     function it_swaps_members()
@@ -163,12 +110,51 @@ class RotaSpec extends ObjectBehavior
             ]
         );
 
-        $this->swapMemberByDate(new \DateTime('2010-01-06'), new \DateTime('2010-01-04'))
+        $this->swapMember(new \DateTime('2010-01-04'))
             ->shouldReturn([
                 '2010-01-01' => 'Alice',
-                '2010-01-04' => 'Dave',
-                '2010-01-05' => 'Chris',
-                '2010-01-06' => 'Bob',
+                '2010-01-04' => 'Chris',
+                '2010-01-05' => 'Bob',
+                '2010-01-06' => 'Dave',
             ]);
+
+        $this->swapMember(new \DateTime('2010-01-01'), 'Bob')
+            ->shouldReturn([
+                '2010-01-01' => 'Bob',
+                '2010-01-04' => 'Chris',
+                '2010-01-05' => 'Alice',
+                '2010-01-06' => 'Dave',
+            ]);
+
+        $this->swapMember(new \DateTime('2010-01-01'), 'Chris', 'Dave')
+            ->shouldReturn([
+                '2010-01-01' => 'Bob',
+                '2010-01-04' => 'Dave',
+                '2010-01-05' => 'Alice',
+                '2010-01-06' => 'Chris',
+            ]);
+    }
+
+    function it_returns_rota_upto_and_from_specified_date()
+    {
+        $uptoRota = [
+            '2009-12-29' => 'Bob',
+            '2009-12-30' => 'Chris',
+            '2009-12-31' => 'Dave',
+        ];
+        $fromRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris',
+            '2010-01-06' => 'Dave',
+        ];
+        $this->beConstructedWith(
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            $uptoRota + $fromRota
+        );
+
+        $this->getRotaUptoDate(new \DateTime('2010-01-01'))->shouldReturn($uptoRota);
+        $this->getRotaFromDate(new \DateTime('2010-01-01'))->shouldReturn($fromRota);
     }
 }

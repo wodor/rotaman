@@ -4,6 +4,7 @@ namespace RgpJones\Lunchbot;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
+use RuntimeException;
 
 class Rota
 {
@@ -11,126 +12,141 @@ class Rota
 
     private $interval;
 
-    private $currentRota;
+    private $rota;
 
     private $dateValidator;
 
-    public function __construct(MemberList $memberList, DateValidator $dateValidator, array $currentRota = array())
+    public function __construct(MemberList $memberList, DateValidator $dateValidator, array $rota = array())
     {
+        ksort($rota);
         $this->memberList = $memberList;
         $this->interval = new DateInterval('P1D');
         $this->dateValidator = $dateValidator;
-        $this->currentRota = $currentRota;
+        $this->rota = $rota;
+    }
+
+    public function getRota()
+    {
+        return $this->rota;
     }
 
     public function generate(DateTime $date, $days)
     {
         $rota = [];
         while (count($rota) < $days) {
-            $rota[$this->getDateKey($date)] = $this->getNextMember();
+            $dateKey = $this->getDateKey($date);
+
+            if (isset($this->rota[$dateKey])) {
+                $rota[$dateKey] = $this->rota[$dateKey];
+                $this->memberList->setCurrentMember($this->rota[$dateKey]);
+            } else {
+                $rota[$dateKey] = $this->memberList->nextMember();
+            }
             $date = $date->add($this->interval);
         }
-        $this->currentRota = array_merge($this->currentRota, $rota);
+        $this->rota = array_merge($this->rota, $rota);
 
         return $rota;
     }
 
-    public function getCurrentRota()
-    {
-        return $this->currentRota;
-    }
-
     public function getMemberForDate(DateTime $date)
     {
-        if (!isset($this->currentRota[$this->getDateKey($date)])) {
-            $this->generate($date, 1);
+        if (isset($this->rota[$this->getDateKey($date)])) {
+            return $this->rota[$this->getDateKey($date)];
         }
-
-        return $this->currentRota[$this->getDateKey($date)];
     }
 
     public function skipMemberForDate(DateTime $date)
     {
-        while (isset($this->currentRota[$this->getDateKey($date)])) {
-            $this->currentRota[$this->getDateKey($date)] = $this->getMemberAfterDate($date);
+        while (isset($this->rota[$this->getDateKey($date)])) {
+            $this->rota[$this->getDateKey($date)] = $this->getMemberAfterDate($date);
             $date->add($this->interval);
         }
     }
 
     public function cancelOnDate(DateTime $cancelDate)
     {
-        $result = false;
         if ($this->dateValidator->isDateValid($cancelDate)) {
             $date = clone $cancelDate;
-            if (isset($this->currentRota[$this->getDateKey($date)])) {
+            if (isset($this->rota[$this->getDateKey($date)])) {
                 $this->removeDateAndMoveMembers($date);
             }
-
             $this->dateValidator->addCancelledDate($cancelDate);
-            $result = true;
+            return true;
         }
-        return $result;
+        return false;
     }
 
-    public function getNextMember()
+    public function swapMember(DateTime $date, $toName = null, $fromName = null)
     {
-        return $this->memberList->next();
+        $rota = $this->getRotaFromDate($date);
+        if (count($rota) < 2) {
+            throw new RunTimeException('There are not enough days in the rota to swap.');
+        }
+
+        $dates = array_keys($rota);
+        $fromDate = is_null($fromName)
+            ? $dates[0]
+            : array_search($fromName, $rota);
+
+        $toDate = is_null($toName)
+            ? $dates[1]
+            : array_search($toName, $rota);
+
+        return $this->swapMemberByDate(new DateTime($toDate), new DateTime($fromDate));
     }
 
-    public function getPreviousRotaDate(DateTime $date)
+    public function getRotaFromDate(DateTime $date)
     {
-        $rotaDates = $this->getRotaDatesWithDate($date);
-
-        $rotaDate = null;
-        $offset = array_search($date->format('Y-m-d'), $rotaDates);
-        if ($offset > 0) {
-            $rotaDate = new DateTime($rotaDates[$offset-1]);
-        }
-
-        return $rotaDate;
+        $dates = array_keys($this->rota);
+        return array_intersect_key(
+            $this->rota,
+            array_flip(
+                array_slice($dates, array_search($date->format('Y-m-d'), $dates))
+            )
+        );
     }
 
-    public function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
+    public function getRotaUptoDate(DateTime $date)
     {
-        if (!isset($this->currentRota[$fromDate->format('Y-m-d')])) {
-            throw new InvalidArgumentException('Specified From date ' . $fromDate->format('Y-m-d') . ' is invalid');
-        }
-
-        if (!isset($this->currentRota[$toDate->format('Y-m-d')])) {
-            throw new InvalidArgumentException('Specified To date ' . $toDate->format('Y-m-d') . ' is invalid');
-        }
-
-        $fromMember = $this->currentRota[$fromDate->format('Y-m-d')];
-        $toMember = $this->currentRota[$toDate->format('Y-m-d')];
-
-        $this->currentRota[$fromDate->format('Y-m-d')] = $toMember;
-        $this->currentRota[$toDate->format('Y-m-d')] = $fromMember;
-
-        return $this->currentRota;
+        $dates = array_keys($this->rota);
+        return array_intersect_key(
+            $this->rota,
+            array_flip(
+                array_slice($dates, 0, array_search($date->format('Y-m-d'), $dates))
+            )
+        );
     }
 
     protected function removeDateAndMoveMembers($date)
     {
-        $member = $this->currentRota[$this->getDateKey($date)];
-        unset($this->currentRota[$this->getDateKey($date)]);
-        while (isset($this->currentRota[$this->getDateKey($date->add($this->interval))])) {
-            $nextMember = $this->currentRota[$this->getDateKey($date)];
-            $this->currentRota[$this->getDateKey($date)] = $member;
+        $member = $this->rota[$this->getDateKey($date)];
+        unset($this->rota[$this->getDateKey($date)]);
+        while (isset($this->rota[$this->getDateKey($date->add($this->interval))])) {
+            $nextMember = $this->rota[$this->getDateKey($date)];
+            $this->rota[$this->getDateKey($date)] = $member;
             $member = $nextMember;
         }
-        $this->currentRota[$this->getDateKey($date)] = $member;
+        $this->rota[$this->getDateKey($date)] = $member;
     }
 
-    protected function getRotaDatesWithDate(DateTime $date)
+    protected function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
     {
-        $date = $date->format('Y-m-d');
-        $rotaDates = array_keys($this->currentRota);
-        if (!in_array($date, $rotaDates)) {
-            $rotaDates[] = $date;
+        if (!isset($this->rota[$fromDate->format('Y-m-d')])) {
+            throw new InvalidArgumentException('Specified From date ' . $fromDate->format('Y-m-d') . ' is invalid');
         }
-        sort($rotaDates);
 
-        return $rotaDates;
+        if (!isset($this->rota[$toDate->format('Y-m-d')])) {
+            throw new InvalidArgumentException('Specified To date ' . $toDate->format('Y-m-d') . ' is invalid');
+        }
+
+        $fromMember = $this->rota[$fromDate->format('Y-m-d')];
+        $toMember = $this->rota[$toDate->format('Y-m-d')];
+
+        $this->rota[$fromDate->format('Y-m-d')] = $toMember;
+        $this->rota[$toDate->format('Y-m-d')] = $fromMember;
+
+        return $this->rota;
     }
 
     protected function getDateKey(DateTime $date)
@@ -140,6 +156,6 @@ class Rota
 
     protected function getMemberAfterDate(DateTime $date)
     {
-        return $this->memberList->getMemberAfter($this->currentRota[$this->getDateKey($date)]);
+        return $this->memberList->getMemberAfter($this->rota[$this->getDateKey($date)]);
     }
 }
