@@ -39,7 +39,7 @@ class RotaManager
             $this->storage->save([
                 'members' => $this->member->getMembers(),
                 'cancelledDates' => $this->dateValidator->getCancelledDates(),
-                'rota' => $this->rota->getCurrentRota(),
+                'rota' => $this->rota->getRota(),
                 'paymentCalendar' => $this->paymentCalendar->getPaymentCalendar(),
             ]);
         }
