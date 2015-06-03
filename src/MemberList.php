@@ -39,7 +39,7 @@ class MemberList
     {
         $this->members[] = array_shift($this->members);
 
-        return $this->members[count($this->members) - 1];
+        return $this->members[0];
     }
 
     public function prev()

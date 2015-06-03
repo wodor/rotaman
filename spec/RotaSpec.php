@@ -12,7 +12,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days()
     {
         $this->beConstructedWith(
-            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Dave', 'Alice', 'Bob', 'Chris']),
             new DateValidator()
         );
 
@@ -30,7 +30,7 @@ class RotaSpec extends ObjectBehavior
     function it_generates_rota_for_next_5_days_and_skip_weekend()
     {
         $this->beConstructedWith(
-            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
+            new MemberList(['Dave', 'Alice', 'Bob', 'Chris']),
             new DateValidator()
         );
 
@@ -45,26 +45,9 @@ class RotaSpec extends ObjectBehavior
         );
     }
 
-    function it_returns_member_for_date()
-    {
-        $currentRota = [
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Chris',
-        ];
-
-        $this->beConstructedWith(
-            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
-            new DateValidator(),
-            $currentRota
-        );
-
-        $this->getMemberForDate(new \DateTime('2010-01-05'))->shouldReturn('Chris');
-    }
-
     function it_generates_rota_with_existing_rota()
     {
-        $clubbers = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $clubbers = ['Dave', 'Alice', 'Bob', 'Chris'];
         $currentRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
@@ -85,7 +68,24 @@ class RotaSpec extends ObjectBehavior
         $this->generate(new \DateTime('2010-01-01'), 10)->shouldReturn($expectedRota);
     }
 
-    function it_skips_current_user_and_realigns_rota()
+    function it_returns_member_for_date()
+    {
+        $currentRota = [
+            '2010-01-01' => 'Alice',
+            '2010-01-04' => 'Bob',
+            '2010-01-05' => 'Chris',
+        ];
+
+        $this->beConstructedWith(
+            new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
+            new DateValidator(),
+            $currentRota
+        );
+
+        $this->getMemberForDate(new \DateTime('2010-01-05'))->shouldReturn('Chris');
+    }
+
+    function it_skips_current_member_and_realigns_rota()
     {
         $this->beConstructedWith(
             new MemberList(['Alice', 'Bob', 'Chris', 'Dave']),
