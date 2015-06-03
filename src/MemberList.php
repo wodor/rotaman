@@ -35,20 +35,29 @@ class MemberList
         return $this->members;
     }
 
-    public function next()
+    public function nextMember()
     {
         $this->members[] = array_shift($this->members);
 
         return $this->members[0];
     }
 
-    public function prev()
+    public function previousMember()
     {
         array_unshift($this->members, array_pop($this->members));
 
         return $this->members[0];
     }
 
+    public function setCurrentMember($member)
+    {
+        if (!in_array($member, $this->members)) {
+            throw new \InvalidArgumentException("{$member} is not in the members list");
+        }
+        unset($this->members[array_search($member, $this->members)]);
+        $this->nextMember();
+        array_unshift($this->members, $member);
+    }
 
     public function getMemberAfter($name)
     {
