@@ -19,23 +19,22 @@ class Swap implements Command
 
     public function getUsage()
     {
-        return '`swap` <toDate> [fromDate]: Swap shopping duty to specified date (Y-m-d).';
+        return '`swap` [member1] [member2]: Swap shopping duty between member1 and member2. Without member2 specified, '
+            . 'member1 is swapped with current member. With no members specified today and next day are swapped';
     }
 
     public function run(array $args, $username)
     {
-        if (!isset($args[0])) {
-            throw new RunTimeException('You must provide a date to swap to');
-        }
+        $toUser = isset($args[0])
+            ? $args[0]
+            : null;
 
-        $toDate = new DateTime($args[0]);
-        $fromDate = isset($args[1])
-            ? new DateTime($args[1])
-            : new DateTime();
+        $fromUser = isset($args[1])
+            ? $args[1]
+            : null;
 
-        $this->rotaManager->swapMemberByDate($toDate, $fromDate);
+        $this->rotaManager->swapMember(new DateTime(), $toUser, $fromUser);
 
-        $this->slack->send("Members swapped for dates {$fromDate->format('l, jS F Y')} and "
-            . "{$toDate->format('l, jS F Y')}");
+        $this->slack->send('Members swapped');
     }
 }
