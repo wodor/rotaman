@@ -49,9 +49,9 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-05' => 'Chris'
         ];
 
-        $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave']]);
+        $storage->load()->willReturn(['members' => ['Dave', 'Alice', 'Bob', 'Chris']]);
         $storage->save(
-            ['members' => ['Dave', 'Alice', 'Bob', 'Chris'], 'cancelledDates' => [], 'rota' => $expectedRota, 'paymentCalendar' => []]
+            ['members' => ['Chris', 'Dave', 'Alice', 'Bob'], 'cancelledDates' => [], 'rota' => $expectedRota, 'paymentCalendar' => []]
         )->willReturn(null);
 
         $this->beConstructedWith($storage);
@@ -83,7 +83,7 @@ class RotaManagerSpec extends ObjectBehavior
         $storage->load()->willReturn(['members' => ['Alice', 'Bob', 'Chris', 'Dave', 'Elaine'], 'rota' => $currentRota]);
         $storage->save(
             [
-                'members' => ['Bob', 'Chris', 'Dave', 'Elaine', 'Alice'],
+                'members' => ['Alice', 'Bob', 'Chris', 'Dave', 'Elaine'],
                 'cancelledDates' => [],
                 'rota' => ($currentRota + $expectedRota),
                 'paymentCalendar' => []
@@ -112,14 +112,14 @@ class RotaManagerSpec extends ObjectBehavior
             '2010-01-14' => 'Bob',
             '2010-01-15' => 'Chris',
             '2010-01-18' => 'Dave',
-            '2010-01-19' => 'Alice',
-            '2010-01-20' => 'Bob',
+            '2010-01-19' => 'Bob',
+            '2010-01-20' => 'Chris',
         ];
 
-        $storage->load()->willReturn(['members' => ['Bob', 'Chris', 'Dave'], 'rota' => $currentRota]);
+        $storage->load()->willReturn(['members' => ['Dave', 'Bob', 'Chris'], 'rota' => $currentRota]);
         $storage->save(
             [
-                'members' => ['Chris', 'Dave', 'Alice', 'Bob'],
+                'members' => ['Chris', 'Dave', 'Bob'],
                 'cancelledDates' => [],
                 'rota' => ($currentRota + $expectedRota),
                 'paymentCalendar' => []
@@ -128,14 +128,12 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->addMember('Alice');
-
         $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
     }
 
-    function it_returns_member_for_date(Storage $storage)
+    function it_returns_member(Storage $storage)
     {
-        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
+        $members = ['Dave', 'Alice', 'Bob', 'Chris'];
         $expectedRota = [
             '2010-01-01' => 'Alice',
             '2010-01-04' => 'Bob',
@@ -216,38 +214,6 @@ class RotaManagerSpec extends ObjectBehavior
         $this->cancelOnDate(new \DateTime('2010-01-05'));
     }
 
-    function it_saves_members_correctly_missing_from_current_rota(Storage $storage)
-    {
-        $members = ['Alice', 'Bob', 'Chris', 'Dave'];
-        $currentRota = [
-            '2009-12-29' => 'Bob',
-            '2010-01-01' => 'Alice',
-            '2010-01-04' => 'Bob',
-            '2010-01-05' => 'Dave',
-            '2010-01-07' => 'Alice'
-        ];
-        $nextRota = [
-            '2010-01-12' => 'Bob',
-            '2010-01-13' => 'Dave',
-            '2010-01-14' => 'Alice',
-            '2010-01-15' => 'Chris',
-        ];
-
-        $storage->load()->willReturn(['members' => $members, 'cancelledDates' => [], 'rota' => $currentRota]);
-        $storage->save(
-            [
-                'members' => ['Bob', 'Dave', 'Alice', 'Chris'],
-                'cancelledDates' => [],
-                'rota' => $currentRota + $nextRota,
-                'paymentCalendar' => []
-            ]
-        )->willReturn(null);
-
-        $this->beConstructedWith($storage);
-
-        $this->generateRota(new \DateTime('2010-01-12'), 4)->shouldReturn($nextRota);
-    }
-
     function it_swaps_members_on_dates_specified(Storage $storage)
     {
         $updatedRota = [
@@ -276,10 +242,7 @@ class RotaManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($storage);
 
-        $this->swapMemberByDate(
-            new \DateTime('2010-01-05'),
-            new \DateTime('2010-01-01')
-        )->shouldReturn($updatedRota);
+        $this->swapMember(new \DateTime('2010-01-01'), 'Chris')->shouldReturn($updatedRota);
     }
 
     function it_marks_member_as_paid(Storage $storage)

@@ -11,7 +11,7 @@ class RotaManager
 
     private $dateValidator;
 
-    private $member;
+    private $memberList;
 
     private $paymentCalendar;
 
@@ -21,15 +21,15 @@ class RotaManager
 
         $data = $storage->load();
 
-        $currentRota = isset($data['rota']) ? $data['rota'] : [];
+        $rota = isset($data['rota']) ? $data['rota'] : [];
         $cancelledDates = isset($data['cancelledDates']) ? $data['cancelledDates'] : [];
         $members = isset($data['members']) ? $data['members'] : [];
         $paymentCalendar = isset($data['paymentCalendar']) ? $data['paymentCalendar'] : [];
 
         // Maintains members in order as they are in current rota
-        $this->member = $this->getMemberList($members, $currentRota);
+        $this->memberList = new MemberList($members);
         $this->dateValidator = new DateValidator($cancelledDates);
-        $this->rota = new Rota($this->member, $this->dateValidator, $currentRota);
+        $this->rota = new Rota($this->memberList, $this->dateValidator, $rota);
         $this->paymentCalendar =  new PaymentCalendar($paymentCalendar);
     }
 
@@ -37,7 +37,7 @@ class RotaManager
     {
         if (!empty($this->storage)) {
             $this->storage->save([
-                'members' => $this->member->getMembers(),
+                'members' => $this->memberList->getMembers(),
                 'cancelledDates' => $this->dateValidator->getCancelledDates(),
                 'rota' => $this->rota->getRota(),
                 'paymentCalendar' => $this->paymentCalendar->getPaymentCalendar(),
@@ -47,17 +47,17 @@ class RotaManager
 
     public function addMember($name)
     {
-        $this->member->addMember($name);
+        $this->memberList->addMember($name);
     }
 
     public function removeMember($name)
     {
-        $this->member->removeMember($name);
+        $this->memberList->removeMember($name);
     }
 
     public function getMembers()
     {
-        return $this->member->getMembers();
+        return $this->memberList->getMembers();
     }
 
     public function generateRota(DateTime $date, $days)
@@ -80,11 +80,9 @@ class RotaManager
         return $this->rota->cancelOnDate($date);
     }
 
-    public function swapMemberByDate(DateTime $toDate, DateTime $fromDate)
+    public function swapMember(DateTime $date, $toName = null, $fromName = null)
     {
-        $rota = $this->rota->swapMemberByDate($toDate, $fromDate);
-        $this->member = $this->getMemberList($this->member->getMembers(), $rota);
-        return $rota;
+        return $this->rota->swapMember($date, $toName, $fromName);
     }
 
     public function getAmountMemberPaidForDate($date, $member)
@@ -100,31 +98,5 @@ class RotaManager
     public function getWhoPaidForDate(DateTime $date)
     {
         return $this->paymentCalendar->getWhoPaidForDate($date);
-    }
-
-
-
-    protected function getMemberList($members, $rota)
-    {
-        return new MemberList($this->getMembersInRotaOrder($members, $rota));
-    }
-
-    protected function getMembersInRotaOrder(array $members, array $currentRota)
-    {
-        $reverseCurrentRota = $this->getMembersFromRotaInRecentOrder($currentRota);
-        $allMembers = array_values(array_unique(array_merge($reverseCurrentRota, $members)));
-        return array_values(array_intersect($allMembers, $members));
-    }
-
-    /**
-     * Gets the members in the rota in the order that they were most recently
-     *
-     * @param $rota
-     *
-     * @return array
-     */
-    protected function getMembersFromRotaInRecentOrder($rota)
-    {
-        return array_reverse(array_unique(array_reverse($rota)));
     }
 }

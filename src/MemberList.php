@@ -35,6 +35,11 @@ class MemberList
         return $this->members;
     }
 
+    public function setMembers($members)
+    {
+        $this->members = $members;
+    }
+
     public function nextMember()
     {
         $this->members[] = array_shift($this->members);

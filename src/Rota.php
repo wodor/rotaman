@@ -25,6 +25,11 @@ class Rota
         $this->rota = $rota;
     }
 
+    public function getMemberList()
+    {
+        return $this->memberList;
+    }
+
     public function getRota()
     {
         return $this->rota;
@@ -93,7 +98,9 @@ class Rota
             ? $dates[1]
             : array_search($toName, $rota);
 
-        return $this->swapMemberByDate(new DateTime($toDate), new DateTime($fromDate));
+        $rota = $this->swapMemberByDate(new DateTime($toDate), new DateTime($fromDate));
+        $this->memberList->setMembers(array_unique(array_values($rota)));
+        return $rota;
     }
 
     public function getRotaFromDate(DateTime $date)
