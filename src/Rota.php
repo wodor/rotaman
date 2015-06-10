@@ -61,12 +61,18 @@ class Rota
         }
     }
 
+    public function setMemberForDate(DateTime $date, $member)
+    {
+        $this->rota[$this->getDateKey($date)] = $member;
+    }
+
     public function skipMemberForDate(DateTime $date)
     {
         while (isset($this->rota[$this->getDateKey($date)])) {
             $this->rota[$this->getDateKey($date)] = $this->getMemberAfterDate($date);
             $date->add($this->interval);
         }
+        return true;
     }
 
     public function cancelOnDate(DateTime $cancelDate)

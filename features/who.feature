@@ -1,4 +1,4 @@
-Feature: Lunchclubbers can se who's turn it is today
+Feature: Lunchclubbers can see who's turn it is today
   As a Lunchclubber
   I want to see who's turn it is to shop
   So I don't starve
@@ -9,5 +9,5 @@ Feature: Lunchclubbers can se who's turn it is today
     When I type "/lunchclub who"
     Then I should see in the channel
     """
-    Today's shopper is test2
+    Today it is test2's turn to shop
     """

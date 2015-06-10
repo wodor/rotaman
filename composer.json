@@ -1,12 +1,15 @@
 {
     "require-dev": {
-        "phpspec/phpspec": "dev-master",
+        "phpspec/phpspec": "2.*",
         "behat/behat": "3.*"
     },
     "config": {
         "bin-dir": "bin"
     },
     "autoload": {
+        "psr-0": {
+            "": "src/"
+        },
         "psr-4": {
             "RgpJones\\Lunchbot\\": "src/",
             "spec\\RgpJones\\Lunchbot\\": "spec/"

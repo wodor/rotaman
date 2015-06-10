@@ -70,6 +70,11 @@ class RotaManager
         return $this->rota->getMemberForDate($date);
     }
 
+    public function setMemberForDate(DateTime $date, $member)
+    {
+        return $this->rota->setMemberForDate($date, $member);
+    }
+
     public function skipMemberForDate(DateTime $date)
     {
         return $this->rota->skipMemberForDate($date);

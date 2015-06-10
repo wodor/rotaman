@@ -12,11 +12,12 @@ Feature: Get Command Help
 `cancel` [date]: Cancel lunchclub for today, or on date specified (Y-m-d)
 `help`: Display this help text
 `join`: Join lunch club
-`leave`: Leave lunch club (to-do)
+`kick` <person>: Remove person from lunchclub
+`leave`: Leave lunch club
 `paid` <amount> [date]: Mark yourself as having paid <amount> for the current month. Specify [date] of month if not for current month. e.g. 2014-12-01 for December
-`rota` [days]: Show the upcoming rota for the number of days specified
-`skip`: Skip current shopper, and pull remaining rota forwards
-`swap` <toDate> [fromDate]: Swap shopping duty to specified date (Y-m-d).
+`rota`: Show the upcoming rota
+`skip`: Skip current member, and pull remaining rota forwards
+`swap` [member1] [member2]: Swap shopping duty between member1 and member2. Without member2 specified, member1 is swapped with current member. With no members specified today and next day are swapped
 `who`: Whose turn it is to shop
 `whopaid`: Report who has paid money this month. This only reports that a person has paid some amount of money.
     """
@@ -29,11 +30,12 @@ Feature: Get Command Help
 `cancel` [date]: Cancel lunchclub for today, or on date specified (Y-m-d)
 `help`: Display this help text
 `join`: Join lunch club
-`leave`: Leave lunch club (to-do)
+`kick` <person>: Remove person from lunchclub
+`leave`: Leave lunch club
 `paid` <amount> [date]: Mark yourself as having paid <amount> for the current month. Specify [date] of month if not for current month. e.g. 2014-12-01 for December
-`rota` [days]: Show the upcoming rota for the number of days specified
-`skip`: Skip current shopper, and pull remaining rota forwards
-`swap` <toDate> [fromDate]: Swap shopping duty to specified date (Y-m-d).
+`rota`: Show the upcoming rota
+`skip`: Skip current member, and pull remaining rota forwards
+`swap` [member1] [member2]: Swap shopping duty between member1 and member2. Without member2 specified, member1 is swapped with current member. With no members specified today and next day are swapped
 `who`: Whose turn it is to shop
 `whopaid`: Report who has paid money this month. This only reports that a person has paid some amount of money.
     """

@@ -60,7 +60,7 @@ class FeatureContext implements SnippetAcceptingContext
     public function iAmALunchclubUser()
     {
         $this->username = 'test';
-        $this->application['rota_manager']->addShopper($this->username);
+        $this->application['rota_manager']->addMember($this->username);
     }
 
     /**
@@ -100,10 +100,8 @@ class FeatureContext implements SnippetAcceptingContext
         $today = new DateTime;
         /** @var RotaManager $manager */
         $manager = $this->application['rota_manager'];
-        $manager->addShopper($username);
-        while ($manager->getShopperForDate(clone $today) != $username) {
-            $manager->skipShopperForDate(new DateTime);
-        }
+        $manager->addMember($username);
+        $manager->setMemberForDate($today, $username);
     }
 
     /**
