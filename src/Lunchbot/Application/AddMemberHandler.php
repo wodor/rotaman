@@ -20,10 +20,8 @@ class AddMemberHandler implements CommandHandler
      */
     private $members;
 
-    public function __construct(
-        EventBus $eventBus,
-        Members $members
-    ) {
+    public function __construct(EventBus $eventBus, Members $members)
+    {
         $this->eventBus = $eventBus;
         $this->members = $members;
     }
