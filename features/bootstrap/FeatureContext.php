@@ -1,17 +1,23 @@
 <?php
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
-use RgpJones\Lunchbot\Application;
-use RgpJones\Lunchbot\RotaManager;
+use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use bootstrap\ContextProvidingTrait;
+
+use RgpJones\Lunchbot\Application;
+use RgpJones\Lunchbot\RotaManager;
 
 /**
  * Behat context class.
  */
 class FeatureContext implements SnippetAcceptingContext
 {
+    use ContextProvidingTrait;
+    
     private $username;
     /**
      * @var Application
@@ -26,6 +32,26 @@ class FeatureContext implements SnippetAcceptingContext
     private $config;
 
     private $storage;
+
+    private $commandBus;
+
+    private $eventBus;
+
+    public function __construct()
+    {
+        $this->eventBus = new Lunchbot\Infrastructure\EventBus();
+
+        $this->commandBus = new Lunchbot\Infrastructure\CommandBus([
+            new Lunchbot\Application\AddMemberHandler(
+                $this->eventBus,
+                new Lunchbot\Persistent\MembersInMemory(
+                    new \Everzet\PersistedObjects\InMemoryRepository(
+                        new \Everzet\PersistedObjects\AccessorObjectIdentifier('getId')
+                    )
+                )
+            )
+        ]);
+    }
 
     /**
      * @BeforeScenario
@@ -113,6 +139,38 @@ class FeatureContext implements SnippetAcceptingContext
 
         if (strpos($messages[0], (string) $string) === false) {
             throw new Exception(sprintf('Expected %s but got %s', $string, $messages[0]));
+        }
+    }
+
+    /**
+     * @When I add user to Lunchclub:
+     */
+    public function iAddUserToLunchclub(TableNode $table)
+    {
+        $row = $table->getHash()[0];
+        $command = new Lunchbot\Model\Member\AddMember(
+            new \Lunchbot\ValueObject\Member\MemberId($row['username']),
+            new \Lunchbot\ValueObject\Member\Name($row['name'])
+        );
+
+        $this->commandBus->dispatch($command);
+    }
+
+    /**
+     * @Then the list of members contains user:
+     */
+    public function theListOfMembersContainsUser(TableNode $table)
+    {
+        $row = $table->getHash()[0];
+        $event = new \Lunchbot\Model\Member\MemberAdded(
+            new \Lunchbot\ValueObject\Member\MemberId($row['username']),
+            new \Lunchbot\ValueObject\Member\Name($row['name'])
+        );
+
+        $events = $this->eventBus->getEvents();
+
+        if ($events[0] != $event) {
+            throw new \RuntimeException('The event was not found');
         }
     }
 }

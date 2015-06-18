@@ -1,14 +1,15 @@
 {
     "require-dev": {
         "phpspec/phpspec": "2.*",
-        "behat/behat": "3.*"
+        "behat/behat": "3.*",
+        "everzet/persisted-objects": "~1.0"
     },
     "config": {
         "bin-dir": "bin"
     },
     "autoload": {
         "psr-0": {
-            "": "src/"
+            "": ["src/", "features/"]
         },
         "psr-4": {
             "RgpJones\\Lunchbot\\": "src/",
