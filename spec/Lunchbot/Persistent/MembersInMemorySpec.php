@@ -15,7 +15,7 @@ class MembersInMemorySpec extends ObjectBehavior
     function it_stores_the_member_and_it_can_be_retrieved()
     {
         $this->beConstructedWith(new InMemoryRepository(
-            new AccessorObjectIdentifier('getName')
+            new AccessorObjectIdentifier('getId')
         ));
 
         $member = Member::add(new MemberId('anya'), new Name('Anya'));
