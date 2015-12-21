@@ -1,0 +1,20 @@
+{
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "": [
+                "src"
+            ]
+        }
+    },
+    "require-dev": {
+        "behat/behat": "^3.0",
+        "phpspec/phpspec": "^2.4",
+        "everzet/persisted-objects": "^1.0"
+    },
+    "require": {
+        "silex/silex": "^1.3"
+    }
+}
