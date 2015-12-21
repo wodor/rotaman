@@ -1,4 +1,5 @@
-bin/
+bin/*
+!bin/lunchbot
 composer.phar
 composer.lock
 vendor/
