@@ -1,5 +1,5 @@
 <?php
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Rotaman;
 
 use SimpleXMLElement;
 
@@ -21,9 +21,9 @@ class Slack
 
     public function send($message)
     {
-        $content['username'] = 'Lunchbot';
+        $content['username'] = 'Rotaman';
         $content['text'] = $message;
-        $content['icon_emoji'] = ':sandwich:';
+        $content['icon_emoji'] = ':calendar:';
 
         if ((int) $this->config->testMode) {
             $content['channel'] = (string) $this->config->channel_id_test;

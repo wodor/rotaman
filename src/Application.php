@@ -1,8 +1,7 @@
 <?php
 
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Rotaman;
 
-use Pimple\Container;
 use Silex\Application as BaseApplication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

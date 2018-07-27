@@ -1,6 +1,6 @@
 <?php
 
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Rotaman;
 
 class Storage
 {

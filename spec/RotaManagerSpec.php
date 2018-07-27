@@ -1,10 +1,10 @@
 <?php
 
-namespace spec\RgpJones\Lunchbot;
+namespace spec\RgpJones\Rotaman;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use RgpJones\Lunchbot\Storage;
+use RgpJones\Rotaman\Storage;
 
 class RotaManagerSpec extends ObjectBehavior
 {
@@ -95,7 +95,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->generateRota(new \DateTime('2010-01-14'), 5)->shouldReturn($expectedRota);
     }
 
-    function it_excludes_members_removed_from_lunchclub(Storage $storage)
+    function it_excludes_members_removed_from_rota(Storage $storage)
     {
         $currentRota = [
             '2010-01-01' => 'Bob',
@@ -183,7 +183,7 @@ class RotaManagerSpec extends ObjectBehavior
         $this->skipMemberForDate(new \DateTime('2010-01-05'));
     }
 
-    function it_cancels_lunchclub_on_date(Storage $storage)
+    function it_cancels_rota_on_date(Storage $storage)
     {
         $members = ['Alice', 'Bob', 'Chris', 'Dave'];
         $currentRota = [

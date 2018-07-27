@@ -1,10 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
 use DateTime;
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
+use RgpJones\Rotaman\Slack;
 
 class Whopaid implements Command
 {
@@ -34,7 +34,7 @@ class Whopaid implements Command
 
         $paidMembers = $this->rotaManager->getWhoPaidForDate($date);
         $this->slack->send(
-            "Lunchclub payments for " . $date->format('F') . ":\n"
+            "Payments for " . $date->format('F') . ":\n"
                 . $this->formatWhoPaid($paidMembers)
         );
     }

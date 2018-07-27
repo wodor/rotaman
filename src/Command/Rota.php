@@ -1,10 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
 use DateTime;
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
+use RgpJones\Rotaman\Slack;
 
 class Rota implements Command
 {

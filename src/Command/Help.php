@@ -1,8 +1,8 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
 use Pimple\Container;
-use RgpJones\Lunchbot\Command;
+use RgpJones\Rotaman\Command;
 
 class Help implements Command
 {
@@ -23,7 +23,7 @@ class Help implements Command
 
     public function run(array $args, $username)
     {
-        $response = "/lunchbot <command>\n";
+        $response = "/rota <command>\n";
 
         foreach ($this->commands->keys() as $key) {
             $response .= $this->commands[$key]->getUsage() . "\n";

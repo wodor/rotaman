@@ -1,9 +1,9 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
 use DateTime;
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
 
 class Skip implements Command
 {

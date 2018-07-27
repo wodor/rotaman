@@ -1,5 +1,5 @@
 <?php
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Rotaman;
 
 use DateInterval;
 use DateTime;

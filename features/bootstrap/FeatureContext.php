@@ -2,8 +2,8 @@
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
-use RgpJones\Lunchbot\Application;
-use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Rotaman\Application;
+use RgpJones\Rotaman\RotaManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -55,9 +55,9 @@ class FeatureContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given I am a lunchclub user
+     * @Given I am a rota user
      */
-    public function iAmALunchclubUser()
+    public function iAmARotaUser()
     {
         $this->username = 'test';
         $this->application['rota_manager']->addMember($this->username);
@@ -93,7 +93,7 @@ class FeatureContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given :username is shopping today
+     * @Given it is :username user's turn today
      */
     public function isShoppingToday($username)
     {

@@ -1,5 +1,5 @@
 <?php
-namespace RgpJones\Lunchbot;
+namespace RgpJones\Rotaman;
 
 class MemberList
 {
@@ -13,7 +13,7 @@ class MemberList
     public function addMember($name)
     {
         if (in_array($name, $this->members)) {
-            throw new \InvalidArgumentException("'{$name}' is already a member of Lunch Club");
+            throw new \InvalidArgumentException("'{$name}' is already a member of the rota");
         }
 
         $this->members[] = $name;
@@ -22,7 +22,7 @@ class MemberList
     public function removeMember($name)
     {
         if (!in_array($name, $this->members)) {
-            throw new \InvalidArgumentException("'{$name}' is not a member of Lunch Club");
+            throw new \InvalidArgumentException("'{$name}' is not a member of the rota");
         }
 
         unset($this->members[array_search($name, $this->members)]);

@@ -1,9 +1,9 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
+use RgpJones\Rotaman\Slack;
 
 class Leave implements Command
 {
@@ -18,7 +18,7 @@ class Leave implements Command
 
     public function getUsage()
     {
-        return '`leave`: Leave lunch club';
+        return '`leave`: Leave rota';
     }
 
     public function run(array $args, $username)
@@ -28,6 +28,6 @@ class Leave implements Command
         }
         $this->rotaManager->removeMember($username);
 
-        $this->slack->send("{$username} has left Lunchclub");
+        $this->slack->send("{$username} has left the rota");
     }
 }

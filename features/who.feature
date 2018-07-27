@@ -1,13 +1,13 @@
-Feature: Lunchclubbers can see who's turn it is today
-  As a Lunchclubber
-  I want to see who's turn it is to shop
-  So I don't starve
+Feature: Rota users can see whose turn it is today
+  As a rota user
+  I want to see who's turn it is
+  So they can be reminded it is their turn
 
   Scenario: Who command issued
-    Given I am a lunchclub user
-    And "test2" is shopping today
-    When I type "/lunchclub who"
+    Given I am a rota user
+    And it is "test2" user's turn today
+    When I type "/rota who"
     Then I should see in the channel
     """
-    Today it is test2's turn to shop
+    It is test2's turn today
     """

@@ -1,10 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
 use DateTime;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Slack;
 
 class Paid implements Command
 {

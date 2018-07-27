@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\RgpJones\Lunchbot;
+namespace spec\RgpJones\Rotaman;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;

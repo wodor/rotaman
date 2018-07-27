@@ -1,11 +1,11 @@
 <?php
 
-namespace spec\RgpJones\Lunchbot;
+namespace spec\RgpJones\Rotaman;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use RgpJones\Lunchbot\MemberList;
-use RgpJones\Lunchbot\DateValidator;
+use RgpJones\Rotaman\MemberList;
+use RgpJones\Rotaman\DateValidator;
 
 class RotaSpec extends ObjectBehavior
 {
@@ -71,7 +71,7 @@ class RotaSpec extends ObjectBehavior
         ]);
     }
 
-    function it_cancels_lunchclub_on_date_and_realigns_rota()
+    function it_cancels_rota_on_date_and_realigns()
     {
         $date = new \DateTime('2010-01-04');
 

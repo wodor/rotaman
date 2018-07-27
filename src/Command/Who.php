@@ -1,10 +1,10 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
 use DateTime;
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
+use RgpJones\Rotaman\Slack;
 
 class Who implements Command
 {
@@ -22,12 +22,12 @@ class Who implements Command
 
     public function getUsage()
     {
-        return '`who`: Whose turn it is to shop';
+        return '`who`: Whose turn it is today';
     }
 
     public function run(array $args, $username)
     {
         $member = $this->rotaManager->getMemberForDate(new DateTime());
-        $this->slack->send(sprintf('Today it is %s\'s turn to shop', $member));
+        $this->slack->send(sprintf('It is %s\'s turn today', $member));
     }
 }

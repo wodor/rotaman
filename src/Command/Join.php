@@ -1,9 +1,9 @@
 <?php
-namespace RgpJones\Lunchbot\Command;
+namespace RgpJones\Rotaman\Command;
 
-use RgpJones\Lunchbot\Command;
-use RgpJones\Lunchbot\RotaManager;
-use RgpJones\Lunchbot\Slack;
+use RgpJones\Rotaman\Command;
+use RgpJones\Rotaman\RotaManager;
+use RgpJones\Rotaman\Slack;
 
 class Join implements Command
 {
@@ -25,7 +25,7 @@ class Join implements Command
 
     public function getUsage()
     {
-        return '`join`: Join lunch club';
+        return '`join`: Join rota';
     }
 
     public function run(array $args, $username)
@@ -35,6 +35,6 @@ class Join implements Command
         }
         $this->rotaManager->addMember($username);
 
-        $this->slack->send("{$username} has joined Lunchclub");
+        $this->slack->send("{$username} has joined the rota");
     }
 }
