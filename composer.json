@@ -11,8 +11,8 @@
             "": "src/"
         },
         "psr-4": {
-            "RgpJones\\Rotaman\\": "src/",
-            "spec\\RgpJones\\Rotaman\\": "spec/"
+            "RgpJones\\": "src/RgpJones/",
+            "spec\\RgpJones\\": "spec/RgpJones"
         }
     },
     "require": {
