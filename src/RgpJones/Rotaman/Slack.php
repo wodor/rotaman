@@ -24,10 +24,7 @@ class Slack
         $content['username'] = 'Rotaman';
         $content['text'] = $message;
         $content['icon_emoji'] = ':calendar:';
-
-        if ((int) $this->config->testMode) {
-            $content['channel'] = (string) $this->config->channel_id_test;
-        }
+        $content['channel'] = $this->config->channel;
 
         $payload = sprintf("payload=%s", json_encode($content));
 
@@ -38,9 +35,7 @@ class Slack
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
-        if (!$this->debug) {
-            curl_exec($ch);
-        }
+        curl_exec($ch);
 
         $this->messages[] = $message;
         curl_close($ch);

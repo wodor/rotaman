@@ -1,6 +1,6 @@
 bin/
 composer.lock
 composer.phar
+var/
 vendor/
-.lunchbot
 config.xml
