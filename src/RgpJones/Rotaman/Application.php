@@ -15,12 +15,12 @@ class Application extends BaseApplication
         $app = $this;
         $app['config'] = $values['config'];
 
-        $app['rota_manager'] = function () use ($app) {
-            return new RotaManager($app['storage']);
+        $app['storage'] = function () use ($values) {
+            return new Storage($values['config']->channel);
         };
 
-        $app['storage'] = function () use ($values) {
-            return new Storage($values['storage_file']);
+        $app['rota_manager'] = function () use ($app) {
+            return new RotaManager($app['storage']);
         };
 
         $app['slack'] = function () use ($app) {

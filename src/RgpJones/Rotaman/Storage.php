@@ -6,12 +6,12 @@ class Storage
 {
     protected $file;
 
-    public function __construct($file)
+    public function __construct($channel)
     {
-        /*
-        if (!file_exists($file) || !is_writable($file) || !is_writable(dirname($file))) {
-            throw new InvalidArgumentException('Invalid file');
-        }*/
+        $file = __DIR__.'/../../../var/'.$channel.'.json';
+        if (!file_exists($file) || !is_writable($file)) {
+            throw new \InvalidArgumentException('Invalid file');
+        }
         $this->file = $file;
     }
 
